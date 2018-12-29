@@ -80,6 +80,7 @@
                     android:id="@+id/buttonSignIn" app:layout_constraintEnd_toStartOf="@+id/guideline2"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
                     android:layout_marginTop="40dp"
+                    android:onClick="@{()-> fragment.goToSubjectsList()}"
                     app:layout_constraintTop_toBottomOf="@+id/editPassword"/>
             <Button
                     android:text="@string/sign_up"

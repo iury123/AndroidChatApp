@@ -1,5 +1,6 @@
 package com.example.iurymiguel.androidchatapp.views.authentication
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -10,6 +11,7 @@ import androidx.navigation.findNavController
 
 import com.example.iurymiguel.androidchatapp.R
 import com.example.iurymiguel.androidchatapp.databinding.FragmentSignInBinding
+import com.example.iurymiguel.androidchatapp.views.subjects.MainActivity
 
 class SignInFragment : Fragment() {
 
@@ -28,6 +30,13 @@ class SignInFragment : Fragment() {
         binding.fragment = this
 
         return binding.root
+    }
+
+
+    fun goToSubjectsList() {
+        val intent = Intent(context, MainActivity::class.java)
+        startActivity(intent)
+        activity!!.finish()
     }
 
     /**
