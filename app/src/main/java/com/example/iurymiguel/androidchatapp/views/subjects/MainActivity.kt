@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onBackPressed() {
-        if(viewPager.currentItem == 0) {
+        if (viewPager.currentItem == 0) {
             super.onBackPressed()
         } else {
             viewPager.currentItem--
@@ -74,11 +74,12 @@ class MainActivity : AppCompatActivity() {
         private val twoFragments = 2
 
         override fun getItem(position: Int): Fragment {
-            return when(position) {
-                1 -> SubscribedSubjectsFragment.newInstance()
+            return when (position) {
+                0 -> SubscribedSubjectsFragment.newInstance()
                 else -> UnsubscribedSubjectsFragment.newInstance()
             }
         }
+
         override fun getCount(): Int {
             return twoFragments
         }
