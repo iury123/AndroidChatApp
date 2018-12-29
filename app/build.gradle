@@ -20,9 +20,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
+    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha01'
+    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-alpha01'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:27.1.1'
