@@ -15,4 +15,7 @@
     <string name="password">Senha</string>
     <string name="enter">Entrar</string>
     <string name="sign_up">Registrar-se</string>
+    <string name="name">Nome</string>
+    <string name="sign_up_yourself">Registre-se</string>
+    <string name="register">Registrar</string>
 </resources>
