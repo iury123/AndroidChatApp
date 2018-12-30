@@ -1,5 +1,7 @@
 package com.example.iurymiguel.androidchatapp.views.subjects
 
+import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.support.design.widget.TabLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
@@ -11,11 +13,14 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.view.Menu
 import android.view.MenuItem
 import com.example.iurymiguel.androidchatapp.R
+import com.example.iurymiguel.androidchatapp.viewmodels.SubjectsViewModel
+import com.example.iurymiguel.androidchatapp.views.authentication.AuthenticationActivity
 
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var mViewModel: SubjectsViewModel
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,23 +41,24 @@ class MainActivity : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
 
+        mViewModel = ViewModelProviders.of(this).get(SubjectsViewModel::class.java)
+
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
 
-        if (id == R.id.action_settings) {
-            return true
+        if (id == R.id.action_logout) {
+            mViewModel.logout()
+            val intent = Intent(this, AuthenticationActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
         }
 
         return super.onOptionsItemSelected(item)

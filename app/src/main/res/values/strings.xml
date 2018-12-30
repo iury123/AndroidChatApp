@@ -23,4 +23,10 @@
     <string name="invalid_email">Email inválido</string>
     <string name="email_already_used">Email já em uso</string>
     <string name="loading">Carregando</string>
+    <string name="fill_all_fields">Preencha todos os campos.</string>
+    <string name="user_not_found">Usuário não encontrado.</string>
+    <string name="sign_in_error">Erro ao logar no sistema</string>
+    <string name="shared_preferences">sharedPreferences</string>
+    <string name="current_email_key">current_email</string>
+    <string name="logout">Sair</string>
 </resources>

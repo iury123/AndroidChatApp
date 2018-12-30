@@ -48,4 +48,20 @@ class AuthenticationViewModel : ViewModel() {
             }
     }
 
+    /**
+     * Signs in the system.
+     * @param user the user to be signed in.
+     * @param callback Callback to return data to view.
+     */
+    fun signInUser(user: User, callback: FirebaseConnectionCallbacks) {
+        mAuth.signInWithEmailAndPassword(user.email, user.password)
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    callback.onSuccessConnection(it)
+                } else {
+                    callback.onFailedConnection(it)
+                }
+            }
+    }
+
 }
