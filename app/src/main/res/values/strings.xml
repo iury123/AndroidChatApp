@@ -18,4 +18,9 @@
     <string name="name">Nome</string>
     <string name="sign_up_yourself">Registre-se</string>
     <string name="register">Registrar</string>
+    <string name="register_account_error">Erro ao registrar conta.</string>
+    <string name="register_account_success">Sucesso ao registrar conta.</string>
+    <string name="invalid_email">Email inválido</string>
+    <string name="email_already_used">Email já em uso</string>
+    <string name="loading">Carregando</string>
 </resources>
