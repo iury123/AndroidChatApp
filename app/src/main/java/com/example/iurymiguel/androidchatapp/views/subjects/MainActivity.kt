@@ -3,7 +3,6 @@ package com.example.iurymiguel.androidchatapp.views.subjects
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.support.design.widget.TabLayout
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 
 import android.support.v4.app.Fragment
@@ -13,8 +12,15 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.view.Menu
 import android.view.MenuItem
 import com.example.iurymiguel.androidchatapp.R
+import com.example.iurymiguel.androidchatapp.model.Subject
+import com.example.iurymiguel.androidchatapp.utils.Utils
 import com.example.iurymiguel.androidchatapp.viewmodels.SubjectsViewModel
 import com.example.iurymiguel.androidchatapp.views.authentication.AuthenticationActivity
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import android.arch.lifecycle.MutableLiveData
+
 
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -43,14 +49,75 @@ class MainActivity : AppCompatActivity() {
 
         mViewModel = ViewModelProviders.of(this).get(SubjectsViewModel::class.java)
 
+        addListChildEventListener()
     }
 
 
+    /**
+     * Listen to any event related to the list of subjects.
+     */
+    private fun addListChildEventListener() {
+        mViewModel.mSubjectsReference.addChildEventListener(object : ChildEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
+                val key = dataSnapshot.key
+                val value = dataSnapshot.value as HashMap<*, *>
+                val subjectKey = key as String
+                val subjectName = value[Utils.SUBJECT_NAME] as String
+                val subjectSubscribers =
+                    if (value[Utils.SUBSCRIBERS] != null) value[Utils.SUBSCRIBERS]
+                    else hashMapOf<String, String>()
+                val subject = Subject(subjectKey, subjectName, subjectSubscribers as HashMap<String, String>)
+                filterSubjectsLists(subject)
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+
+        })
+    }
+
+    /**
+     * Filters each subject if the current user is subscribed or not.
+     */
+    private fun filterSubjectsLists(subject: Subject) {
+        val userId = mViewModel.mAuth.currentUser!!.uid
+        subject.subscribers[userId]?.let {
+            mViewModel.getSubscribedSubjectsLiveData() += subject
+        } ?: run {
+            mViewModel.getUnsubscribedSubjectsLiveData() += subject
+        }
+    }
+
+    /**
+     * Adds a new item in the list.
+     * @param subject the new subject to be inserted.
+     */
+    operator fun MutableLiveData<MutableList<Subject>>.plusAssign(subject: Subject) {
+        val value = this.value ?: mutableListOf()
+        value.add(subject)
+        this.value = value
+    }
+
+    /**
+     * Creates the options menu.
+     */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
+    /**
+     * Handles selection events of options menu.
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
 
@@ -63,7 +130,6 @@ class MainActivity : AppCompatActivity() {
 
         return super.onOptionsItemSelected(item)
     }
-
 
     override fun onBackPressed() {
         if (viewPager.currentItem == 0) {

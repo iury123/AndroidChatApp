@@ -1,11 +1,8 @@
 package com.example.iurymiguel.androidchatapp.views.authentication
 
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.example.iurymiguel.androidchatapp.R
-import com.example.iurymiguel.androidchatapp.views.subjects.MainActivity
-import com.google.firebase.auth.FirebaseAuth
 
 class AuthenticationActivity : AppCompatActivity() {
 

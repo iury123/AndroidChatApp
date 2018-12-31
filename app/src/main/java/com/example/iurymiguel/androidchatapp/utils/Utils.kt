@@ -9,12 +9,14 @@ class Utils private constructor() {
     companion object {
 
         const val SUBJECTS = "Subjects"
+        const val SUBSCRIBERS = "Subscribers"
         const val SUBJECT_NAME = "subject_name"
         const val SUBJECT_MESSAGES = "messages"
         const val SUBJECT_SUBSCRIBERS = "subscribers"
         const val USERS = "Users"
         const val USER_NAME = "user_name"
         const val USER_EMAIL = "user_email"
+        const val USER_IS_ONLINE = "user_is_online"
         private const val ERROR_INVALID_EMAIL = "the email address is badly formatted."
         private const val ERROR_EMAIL_ALREADY_IN_USE = "the email address is already in use by another account."
         private const val ERROR_USER_NOT_FOUND =

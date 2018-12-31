@@ -37,8 +37,14 @@ class AuthenticationViewModel : ViewModel() {
     private fun saveAuthenticatedUserInDatabase(user: User, callback: FirebaseConnectionCallbacks) {
         val userId = mAuth.currentUser!!.uid
         val userReference = mUsersReference.child(userId)
-        userReference.child(Utils.USER_NAME).setValue(user.name)
-        userReference.child(Utils.USER_EMAIL).setValue(user.email)
+
+        val hash = HashMap<String, Any>()
+
+        hash[Utils.USER_NAME] = user.name
+        hash[Utils.USER_EMAIL] = user.email
+        hash[Utils.USER_IS_ONLINE] = true
+
+        userReference.setValue(hash)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     callback.onSuccessConnection(it)
@@ -57,6 +63,8 @@ class AuthenticationViewModel : ViewModel() {
         mAuth.signInWithEmailAndPassword(user.email, user.password)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
+                    val userId = mAuth.currentUser!!.uid
+                    mUsersReference.child(userId).child(Utils.USER_IS_ONLINE).setValue(true)
                     callback.onSuccessConnection(it)
                 } else {
                     callback.onFailedConnection(it)
