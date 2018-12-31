@@ -14,12 +14,10 @@ class AuthenticationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_authentication)
 
         val auth = FirebaseAuth.getInstance().currentUser
-        val intent: Intent
-        if (auth != null) {
-            intent = Intent(this, MainActivity::class.java)
+        auth?.let {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
-
     }
 }
