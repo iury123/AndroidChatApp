@@ -20,6 +20,8 @@
 
 
             <EditText
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:inputType="textEmailAddress"
@@ -31,6 +33,8 @@
                     app:layout_constraintStart_toStartOf="@+id/guideline"
                     app:layout_constraintEnd_toStartOf="@+id/guideline2"/>
             <EditText
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:inputType="textPassword"

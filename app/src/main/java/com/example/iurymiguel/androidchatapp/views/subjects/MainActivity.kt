@@ -30,15 +30,15 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
-        
+
         viewPager.adapter = mSectionsPagerAdapter
 
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(viewPager))
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+        fab.setOnClickListener {
+            val intent = Intent(this, AddSubjectActivity::class.java)
+            startActivity(intent)
         }
 
         mViewModel = ViewModelProviders.of(this).get(SubjectsViewModel::class.java)

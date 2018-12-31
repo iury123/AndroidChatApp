@@ -24,14 +24,5 @@ class AndroidChatApplication : Application() {
         super.onCreate()
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         startKoin(this, listOf(appModule))
-        val auth = FirebaseAuth.getInstance().currentUser
-        val intent: Intent
-        if (auth != null) {
-            intent = Intent(this, MainActivity::class.java)
-        } else {
-            intent = Intent(this, AuthenticationActivity::class.java)
-        }
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
     }
 }

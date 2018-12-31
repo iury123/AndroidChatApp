@@ -29,4 +29,10 @@
     <string name="shared_preferences">sharedPreferences</string>
     <string name="current_email_key">current_email</string>
     <string name="logout">Sair</string>
+    <string name="type_here">Digite aqui...</string>
+    <string name="add_new_subject">Adicione um novo assunto</string>
+    <string name="insert_subject_name">Insira o nome do assunto</string>
+    <string name="add_subject_error">Erro ao inserir assunto.</string>
+    <string name="add_subject_success">Assunto inserido com sucesso</string>
+    <string name="add">Adicionar</string>
 </resources>

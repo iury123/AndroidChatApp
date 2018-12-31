@@ -8,6 +8,8 @@ class Utils private constructor() {
 
     companion object {
 
+        const val SUBJECTS = "Subjects"
+        const val SUBJECT_NAME = "subject_name"
         const val USERS = "Users"
         const val USER_NAME = "user_name"
         const val USER_EMAIL = "user_email"

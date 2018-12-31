@@ -50,6 +50,9 @@ class SignInFragment : Fragment() {
     }
 
 
+    /**
+     * Signs in given an email and a password.
+     */
     fun signIn() {
         val email = editEmail.text.toString().trim()
         val password = editPassword.text.toString().trim()

@@ -7,6 +7,9 @@ class SubjectsViewModel: ViewModel() {
 
     private val mAuth = FirebaseAuth.getInstance()
 
+    /**
+     * Signs out from the application.
+     */
     fun logout() {
         mAuth.signOut()
     }
