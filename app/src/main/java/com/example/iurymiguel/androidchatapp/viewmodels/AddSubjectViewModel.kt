@@ -9,6 +9,7 @@ class AddSubjectViewModel : ViewModel() {
 
     private val mDatabaseReference = FirebaseDatabase.getInstance().reference
 
+
     /**
      * Inserts a new subject in database.
      * @param subjectName the name of subject.
@@ -16,8 +17,12 @@ class AddSubjectViewModel : ViewModel() {
      */
     fun addSubject(subjectName: String, callback: FirebaseConnectionCallbacks) {
         val subjectsReference = mDatabaseReference.child(Utils.SUBJECTS)
-        val key = subjectsReference.push().key
-        subjectsReference.child(key!!).child(Utils.SUBJECT_NAME).setValue(subjectName)
+
+        val hash = hashMapOf<String, Any?>()
+
+        hash[Utils.SUBJECT_NAME] = subjectName
+
+        subjectsReference.push().setValue(hash)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     callback.onSuccessConnection(it)

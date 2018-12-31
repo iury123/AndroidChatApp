@@ -10,6 +10,8 @@ class Utils private constructor() {
 
         const val SUBJECTS = "Subjects"
         const val SUBJECT_NAME = "subject_name"
+        const val SUBJECT_MESSAGES = "messages"
+        const val SUBJECT_SUBSCRIBERS = "subscribers"
         const val USERS = "Users"
         const val USER_NAME = "user_name"
         const val USER_EMAIL = "user_email"
