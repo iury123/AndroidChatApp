@@ -28,6 +28,32 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mViewModel: SubjectsViewModel
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
+    private val mChildEventListener = object : ChildEventListener {
+        override fun onCancelled(p0: DatabaseError) {
+        }
+
+        override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+        }
+
+        override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+        }
+
+        override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
+            val key = dataSnapshot.key
+            val value = dataSnapshot.value as HashMap<*, *>
+            val subjectKey = key as String
+            val subjectName = value[Utils.SUBJECT_NAME] as String
+            val subjectSubscribers =
+                if (value[Utils.SUBSCRIBERS] != null) value[Utils.SUBSCRIBERS]
+                else hashMapOf<String, String>()
+            val subject = Subject(subjectKey, subjectName, subjectSubscribers as HashMap<String, String>)
+            filterSubjectsLists(subject)
+        }
+
+        override fun onChildRemoved(p0: DataSnapshot) {
+        }
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +74,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         mViewModel = ViewModelProviders.of(this).get(SubjectsViewModel::class.java)
-
         addListChildEventListener()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        removeListChildEventListener()
     }
 
 
@@ -57,33 +87,16 @@ class MainActivity : AppCompatActivity() {
      * Listen to any event related to the list of subjects.
      */
     private fun addListChildEventListener() {
-        mViewModel.mSubjectsReference.addChildEventListener(object : ChildEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
-                val key = dataSnapshot.key
-                val value = dataSnapshot.value as HashMap<*, *>
-                val subjectKey = key as String
-                val subjectName = value[Utils.SUBJECT_NAME] as String
-                val subjectSubscribers =
-                    if (value[Utils.SUBSCRIBERS] != null) value[Utils.SUBSCRIBERS]
-                    else hashMapOf<String, String>()
-                val subject = Subject(subjectKey, subjectName, subjectSubscribers as HashMap<String, String>)
-                filterSubjectsLists(subject)
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-            }
-
-        })
+        mViewModel.mSubjectsReference.addChildEventListener(mChildEventListener)
     }
+
+    /**
+     * Remove the listener which listens any list event.
+     */
+    private fun removeListChildEventListener() {
+        mViewModel.mSubjectsReference.removeEventListener(mChildEventListener)
+    }
+
 
     /**
      * Filters each subject if the current user is subscribed or not.
@@ -103,7 +116,11 @@ class MainActivity : AppCompatActivity() {
      */
     operator fun MutableLiveData<MutableList<Subject>>.plusAssign(subject: Subject) {
         val value = this.value ?: mutableListOf()
-        value.add(subject)
+        val subjectKeys = value.map { it.key }
+        val subjectKeyFound = subjectKeys.find { it == subject.key }
+        subjectKeyFound?.let {
+            value[subjectKeys.indexOf(it)] = subject
+        } ?: value.add(subject)
         this.value = value
     }
 

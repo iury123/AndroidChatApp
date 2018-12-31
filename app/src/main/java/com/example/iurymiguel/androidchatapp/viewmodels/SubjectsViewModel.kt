@@ -11,6 +11,7 @@ class SubjectsViewModel : ViewModel() {
 
     val mSubjectsReference = FirebaseDatabase.getInstance().reference.child(Utils.SUBJECTS)
     val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    lateinit var mSelectedSubject: Subject
     private lateinit var mSubscribedSubjects: MutableLiveData<MutableList<Subject>>
     private lateinit var mUnubscribedSubjects: MutableLiveData<MutableList<Subject>>
 
