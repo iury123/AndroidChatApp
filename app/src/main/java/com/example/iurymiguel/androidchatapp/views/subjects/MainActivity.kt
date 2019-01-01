@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onChildChanged(dataSnapshot: DataSnapshot, p1: String?) {
-
         }
 
         override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
