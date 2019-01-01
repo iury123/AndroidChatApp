@@ -7,8 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.example.iurymiguel.androidchatapp.R
+import com.example.iurymiguel.androidchatapp.viewmodels.SubjectsViewModel
 
 class SubscribedSubjectsFragment : Fragment() {
+
+    private lateinit var mViewModel: SubjectsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

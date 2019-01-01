@@ -3,6 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="android.view.View"/>
         <import type="com.example.iurymiguel.androidchatapp.model.Subject"/>
         <variable name="subject" type="Subject"/>
     </data>
@@ -33,6 +34,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"/>
         <android.support.constraint.ConstraintLayout
                 android:layout_width="0dp"
+                android:visibility="@{subject.numOfNotSeenMessages > 0 ? View.VISIBLE : View.GONE}"
                 android:layout_height="47dp" android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toTopOf="@+id/view" app:layout_constraintStart_toStartOf="@+id/view"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"

@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onChildChanged(dataSnapshot: DataSnapshot, p1: String?) {
+            val x = dataSnapshot
         }
 
         override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
