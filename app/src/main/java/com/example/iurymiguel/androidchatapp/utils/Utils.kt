@@ -1,6 +1,8 @@
 package com.example.iurymiguel.androidchatapp.utils
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.widget.Toast
 import com.example.iurymiguel.androidchatapp.R
 
@@ -9,10 +11,9 @@ class Utils private constructor() {
     companion object {
 
         const val SUBJECTS = "Subjects"
-        const val SUBSCRIBERS = "Subscribers"
+        const val SUBSCRIBERS = "subscribers"
         const val SUBJECT_NAME = "subject_name"
-        const val SUBJECT_MESSAGES = "messages"
-        const val SUBJECT_SUBSCRIBERS = "subscribers"
+        const val MESSAGES = "messages"
         const val USERS = "Users"
         const val USER_NAME = "user_name"
         const val USER_EMAIL = "user_email"
@@ -55,6 +56,37 @@ class Utils private constructor() {
                 else context!!.getString(R.string.sign_in_error)
             }
             showToast(context, message, Toast.LENGTH_SHORT)
+        }
+
+        /**
+         * Shows a alert dialog.
+         * @param context the current context.
+         * @param title the title of alert dialog.
+         * @param message the message of alert dialog.
+         * @param callback1ButtonText the first button text.
+         * @param callback2ButtonText the second button text if exists.
+         * @param callback1 the callback for first button.
+         * @param callback2 the callback for second button if exists.
+         */
+        fun showAlert(
+            context: Context?, title: String = "", message: String = "",
+            callback1ButtonText: String = "", callback2ButtonText: String? = "",
+            callback1: () -> Unit, callback2: () -> Unit?
+        ) {
+
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle(title)
+            builder.setMessage(message)
+            builder.setPositiveButton(callback1ButtonText) { _, _ ->
+                callback1()
+            }
+
+            callback2.let {
+                builder.setNeutralButton(callback2ButtonText) { _, _ ->
+                    it()
+                }
+            }
+            builder.create().show()
         }
 
     }

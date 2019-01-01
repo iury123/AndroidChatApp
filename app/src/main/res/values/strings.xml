@@ -35,4 +35,13 @@
     <string name="add_subject_error">Erro ao inserir assunto.</string>
     <string name="add_subject_success">Assunto inserido com sucesso</string>
     <string name="add">Adicionar</string>
+    <string name="subject">Assunto</string>
+    <string name="subject_ask_action">O que deseja fazer em relação a esse assunto?</string>
+    <string name="subscribe">Inscrever</string>
+    <string name="delete">Excluir</string>
+    <string name="subscribed_subject">Inscrito no assunto</string>
+    <string name="subscribe_error">Erro ao se inscrever no assunto</string>
+    <string name="delete_subject_error">Erro ao deletar assunto</string>
+    <string name="deleted">excluído</string>
+    <string name="no_subject_to_subscribe">Não há nenhum assunto para se inscrever</string>
 </resources>

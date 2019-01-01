@@ -35,24 +35,19 @@ class MainActivity : AppCompatActivity() {
         override fun onChildMoved(p0: DataSnapshot, p1: String?) {
         }
 
-        override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+        override fun onChildChanged(dataSnapshot: DataSnapshot, p1: String?) {
+
         }
 
         override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
-            val key = dataSnapshot.key
-            val value = dataSnapshot.value as HashMap<*, *>
-            val subjectKey = key as String
-            val subjectName = value[Utils.SUBJECT_NAME] as String
-            val subjectSubscribers =
-                if (value[Utils.SUBSCRIBERS] != null) value[Utils.SUBSCRIBERS]
-                else hashMapOf<String, String>()
-            val subject = Subject(subjectKey, subjectName, subjectSubscribers as HashMap<String, String>)
-            filterSubjectsLists(subject)
+            val subject = buildSubjectObject(dataSnapshot)
+            addSubject(subject)
         }
 
-        override fun onChildRemoved(p0: DataSnapshot) {
+        override fun onChildRemoved(dataSnapshot: DataSnapshot) {
+            val subject = buildSubjectObject(dataSnapshot)
+            removeSubject(subject)
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         mViewModel = ViewModelProviders.of(this).get(SubjectsViewModel::class.java)
+        mViewModel.mSubjectsReference.keepSynced(true)
         addListChildEventListener()
     }
 
@@ -97,16 +93,41 @@ class MainActivity : AppCompatActivity() {
         mViewModel.mSubjectsReference.removeEventListener(mChildEventListener)
     }
 
+    /**
+     * Builds a subject object given the dataSnapshot retreived in the callback.
+     * @param dataSnapshot the data about the returned subject.
+     */
+    private fun buildSubjectObject(dataSnapshot: DataSnapshot): Subject {
+        val subjectKey = dataSnapshot.key as String
+        val value = dataSnapshot.value as HashMap<*, *>
+        val subjectName = value[Utils.SUBJECT_NAME] as String
+        val subjectSubscribers =
+            if (value[Utils.SUBSCRIBERS] != null) value[Utils.SUBSCRIBERS]
+            else hashMapOf<String, String>()
+        return Subject(subjectKey, subjectName, subjectSubscribers as HashMap<String, String>)
+    }
 
     /**
      * Filters each subject if the current user is subscribed or not.
      */
-    private fun filterSubjectsLists(subject: Subject) {
+    private fun addSubject(subject: Subject) {
         val userId = mViewModel.mAuth.currentUser!!.uid
         subject.subscribers[userId]?.let {
             mViewModel.getSubscribedSubjectsLiveData() += subject
         } ?: run {
             mViewModel.getUnsubscribedSubjectsLiveData() += subject
+        }
+    }
+
+    /**
+     * Removes subject from subscribed or unsubscribed ones.
+     */
+    private fun removeSubject(subject: Subject) {
+        val userId = mViewModel.mAuth.currentUser!!.uid
+        subject.subscribers[userId]?.let {
+            mViewModel.getSubscribedSubjectsLiveData() -= subject
+        } ?: run {
+            mViewModel.getUnsubscribedSubjectsLiveData() -= subject
         }
     }
 
@@ -122,6 +143,21 @@ class MainActivity : AppCompatActivity() {
             value[subjectKeys.indexOf(it)] = subject
         } ?: value.add(subject)
         this.value = value
+    }
+
+
+    /**
+     * Removes a item from the list.
+     * @param subject the new subject to be inserted.
+     */
+    operator fun MutableLiveData<MutableList<Subject>>.minusAssign(subject: Subject) {
+        val value = this.value ?: mutableListOf()
+        val subjectKeys = value.map { it.key }
+        val subjectKeyFound = subjectKeys.find { it == subject.key }
+        subjectKeyFound?.let {
+            value.removeAt(subjectKeys.indexOf(it))
+            this.value = value
+        }
     }
 
     /**

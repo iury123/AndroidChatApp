@@ -2,6 +2,7 @@ package com.example.iurymiguel.androidchatapp.viewmodels
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.example.iurymiguel.androidchatapp.interfaces.FirebaseConnectionCallbacks
 import com.example.iurymiguel.androidchatapp.model.Subject
 import com.example.iurymiguel.androidchatapp.utils.Utils
 import com.google.firebase.auth.FirebaseAuth
@@ -13,7 +14,7 @@ class SubjectsViewModel : ViewModel() {
     val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     lateinit var mSelectedSubject: Subject
     private lateinit var mSubscribedSubjects: MutableLiveData<MutableList<Subject>>
-    private lateinit var mUnubscribedSubjects: MutableLiveData<MutableList<Subject>>
+    private lateinit var mUnsubscribedSubjects: MutableLiveData<MutableList<Subject>>
 
     /**
      * Retreives the subscribed subjects live data.
@@ -31,10 +32,44 @@ class SubjectsViewModel : ViewModel() {
      * @return the live data.
      */
     fun getUnsubscribedSubjectsLiveData(): MutableLiveData<MutableList<Subject>> {
-        if (!::mUnubscribedSubjects.isInitialized) {
-            mUnubscribedSubjects = MutableLiveData()
+        if (!::mUnsubscribedSubjects.isInitialized) {
+            mUnsubscribedSubjects = MutableLiveData()
         }
-        return mUnubscribedSubjects
+        return mUnsubscribedSubjects
+    }
+
+
+    /**
+     * Subscribes in a subject
+     * @param callback callback which returns to view.
+     */
+    fun subscribesInSubject(callback: FirebaseConnectionCallbacks) {
+        val userId = mAuth.currentUser!!.uid
+        val userEmail = mAuth.currentUser!!.email
+        mSubjectsReference.child(mSelectedSubject.key).child(Utils.SUBSCRIBERS)
+            .child(userId).setValue(userEmail)
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    callback.onSuccessConnection(it)
+                } else {
+                    callback.onFailedConnection(it)
+                }
+            }
+    }
+
+    /**
+     * Deletes a subject.
+     * @param callback callback which returns to view.
+     */
+    fun deleteSubject(callback: FirebaseConnectionCallbacks) {
+        mSubjectsReference.child(mSelectedSubject.key).removeValue()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    callback.onSuccessConnection(it)
+                } else {
+                    callback.onFailedConnection(it)
+                }
+            }
     }
 
     /**
