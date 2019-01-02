@@ -24,6 +24,8 @@ import android.arch.lifecycle.MutableLiveData
 
 import kotlinx.android.synthetic.main.activity_main.*
 
+private const val INDEX_OUT_OF_BOUNDS = -1
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mViewModel: SubjectsViewModel
@@ -36,7 +38,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onChildChanged(dataSnapshot: DataSnapshot, p1: String?) {
-            val x = dataSnapshot
+            val subject = buildSubjectObject(dataSnapshot)
+            handleSubjectInLists(subject)
         }
 
         override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
@@ -108,7 +111,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Filters each subject if the current user is subscribed or not.
+     * Adds subject in subscribed or unsubscribed list.
      */
     private fun addSubject(subject: Subject) {
         val userId = mViewModel.mAuth.currentUser!!.uid
@@ -137,11 +140,11 @@ class MainActivity : AppCompatActivity() {
      */
     operator fun MutableLiveData<MutableList<Subject>>.plusAssign(subject: Subject) {
         val value = this.value ?: mutableListOf()
-        val subjectKeys = value.map { it.key }
-        val subjectKeyFound = subjectKeys.find { it == subject.key }
-        subjectKeyFound?.let {
-            value[subjectKeys.indexOf(it)] = subject
-        } ?: value.add(subject)
+        val index = this.indexOf(subject)
+        when (index > INDEX_OUT_OF_BOUNDS) {
+            true -> value[index] = subject
+            else -> value.add(subject)
+        }
         this.value = value
     }
 
@@ -152,12 +155,35 @@ class MainActivity : AppCompatActivity() {
      */
     operator fun MutableLiveData<MutableList<Subject>>.minusAssign(subject: Subject) {
         val value = this.value ?: mutableListOf()
-        val subjectKeys = value.map { it.key }
-        val subjectKeyFound = subjectKeys.find { it == subject.key }
-        subjectKeyFound?.let {
-            value.removeAt(subjectKeys.indexOf(it))
+        val index = this.indexOf(subject)
+        if (index > INDEX_OUT_OF_BOUNDS) {
+            value.removeAt(index)
             this.value = value
         }
+    }
+
+    /**
+     * Handles subject in both lists when the user subscribes or unsubscribes a subject.
+     * @param subject the subject selected by user.
+     */
+    private fun handleSubjectInLists(subject: Subject) {
+        if (mViewModel.getUnsubscribedSubjectsLiveData().indexOf(subject) > INDEX_OUT_OF_BOUNDS) {
+            mViewModel.getUnsubscribedSubjectsLiveData() -= subject
+            mViewModel.getSubscribedSubjectsLiveData() += subject
+        } else if (mViewModel.getSubscribedSubjectsLiveData().indexOf(subject) > INDEX_OUT_OF_BOUNDS) {
+            mViewModel.getSubscribedSubjectsLiveData() -= subject
+            mViewModel.getUnsubscribedSubjectsLiveData() += subject
+        }
+    }
+
+    /**
+     * Checks if a subject exists in list.
+     * @param subject the subject selected by user.
+     */
+    private fun MutableLiveData<MutableList<Subject>>.indexOf(subject: Subject): Int {
+        val value = this.value ?: mutableListOf()
+        val subjectKeys = value.map { it.key }
+        return subjectKeys.indexOf(subject.key)
     }
 
     /**
