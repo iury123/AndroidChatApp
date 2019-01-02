@@ -167,10 +167,11 @@ class MainActivity : AppCompatActivity() {
      * @param subject the subject selected by user.
      */
     private fun handleSubjectInLists(subject: Subject) {
-        if (mViewModel.getUnsubscribedSubjectsLiveData().indexOf(subject) > INDEX_OUT_OF_BOUNDS) {
+        val userId = mViewModel.mAuth.currentUser!!.uid
+        subject.subscribers[userId]?.let {
             mViewModel.getUnsubscribedSubjectsLiveData() -= subject
             mViewModel.getSubscribedSubjectsLiveData() += subject
-        } else if (mViewModel.getSubscribedSubjectsLiveData().indexOf(subject) > INDEX_OUT_OF_BOUNDS) {
+        } ?: run {
             mViewModel.getSubscribedSubjectsLiveData() -= subject
             mViewModel.getUnsubscribedSubjectsLiveData() += subject
         }
