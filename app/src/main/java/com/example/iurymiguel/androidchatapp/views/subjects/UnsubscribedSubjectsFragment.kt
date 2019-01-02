@@ -49,7 +49,7 @@ class UnsubscribedSubjectsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        mBinding = DataBindingUtil.inflate<FragmentUnsubscribedSubjectsBinding>(
+        mBinding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_unsubscribed_subjects, container, false
         )
