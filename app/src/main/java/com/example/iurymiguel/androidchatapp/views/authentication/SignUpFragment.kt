@@ -63,7 +63,7 @@ class SignUpFragment : Fragment() {
             return
         }
 
-        val user = User(name, email, password)
+        val user = User(name = name, email = email, password = password)
 
         mProgress.show(context)
 

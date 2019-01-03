@@ -20,15 +20,19 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import android.arch.lifecycle.MutableLiveData
+import com.example.iurymiguel.androidchatapp.model.User
+import com.google.firebase.database.ValueEventListener
 
 
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.ext.android.inject
 
 private const val INDEX_OUT_OF_BOUNDS = -1
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mViewModel: SubjectsViewModel
+    private val mCurrentUser: User by inject()
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private val mChildEventListener = object : ChildEventListener {
         override fun onCancelled(p0: DatabaseError) {
@@ -185,6 +189,25 @@ class MainActivity : AppCompatActivity() {
         val value = this.value ?: mutableListOf()
         val subjectKeys = value.map { it.key }
         return subjectKeys.indexOf(subject.key)
+    }
+
+
+    /**
+     * Retreives the current user name.
+     */
+    private fun retreiveCurrentUserName() {
+        val userId = mViewModel.mAuth.currentUser!!.uid
+        val currentUserReference = mViewModel.mUsersReferences.child(userId)
+        val valueEventListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+
+            }
+        }
+        currentUserReference.addListenerForSingleValueEvent(valueEventListener)
     }
 
     /**
