@@ -78,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         mViewModel = ViewModelProviders.of(this).get(SubjectsViewModel::class.java)
         mViewModel.mSubjectsReference.keepSynced(true)
         addListChildEventListener()
+        retreiveCurrentUser()
     }
 
     override fun onDestroy() {
@@ -195,16 +196,18 @@ class MainActivity : AppCompatActivity() {
     /**
      * Retreives the current user name.
      */
-    private fun retreiveCurrentUserName() {
+    private fun retreiveCurrentUser() {
         val userId = mViewModel.mAuth.currentUser!!.uid
         val currentUserReference = mViewModel.mUsersReferences.child(userId)
         val valueEventListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-
+                val value = dataSnapshot.value as HashMap<*, *>
+                mCurrentUser.key = dataSnapshot.key as String
+                mCurrentUser.name = value[Utils.USER_NAME] as String
+                mCurrentUser.email = value[Utils.USER_EMAIL] as String
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-
             }
         }
         currentUserReference.addListenerForSingleValueEvent(valueEventListener)
