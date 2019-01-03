@@ -5,11 +5,16 @@ import android.content.Context
 import android.content.DialogInterface
 import android.widget.Toast
 import com.example.iurymiguel.androidchatapp.R
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class Utils private constructor() {
 
     companion object {
 
+        const val INCOMING_MSG = 0
+        const val OUTGOING_MSG = 1
         const val SUBJECTS = "Subjects"
         const val SUBSCRIBERS = "subscribers"
         const val SUBJECT_NAME = "subject_name"
@@ -87,6 +92,17 @@ class Utils private constructor() {
                 }
             }
             builder.create().show()
+        }
+
+
+        /**
+         * Gets the current date and time.
+         * @return a string with date and time.
+         */
+        fun getCurrentDateTime(): String {
+            val calendar = Calendar.getInstance()
+            val dateFormat = SimpleDateFormat("dd/MM/yyyy - HH:mm:ss")
+            return dateFormat.format(calendar.time)
         }
 
     }

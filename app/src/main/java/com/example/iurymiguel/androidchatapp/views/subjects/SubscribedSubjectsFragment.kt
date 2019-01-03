@@ -2,6 +2,7 @@ package com.example.iurymiguel.androidchatapp.views.subjects
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -14,6 +15,7 @@ import android.view.ViewGroup
 import com.example.iurymiguel.androidchatapp.R
 import com.example.iurymiguel.androidchatapp.databinding.FragmentSubscribedSubjectsBinding
 import com.example.iurymiguel.androidchatapp.viewmodels.SubjectsViewModel
+import com.example.iurymiguel.androidchatapp.views.chat.ChatActivity
 import com.example.iurymiguel.androidchatapp.views.subjects.recyclerAdapters.SubscribedSubjectsRecyclerAdapter
 import org.koin.android.ext.android.inject
 
@@ -51,6 +53,7 @@ class SubscribedSubjectsFragment : Fragment() {
 
         mAdapter.setOnClickListener {
             mViewModel.mSelectedSubject = it
+            startActivity(Intent(activity, ChatActivity::class.java))
         }
 
         val recyclerView: RecyclerView = mBinding.subscribedSubjectsRecyclerView

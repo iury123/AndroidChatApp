@@ -3,6 +3,7 @@ package com.example.iurymiguel.androidchatapp.application
 import android.app.Application
 import com.example.iurymiguel.androidchatapp.model.User
 import com.example.iurymiguel.androidchatapp.utils.ProgressDialogProvider
+import com.example.iurymiguel.androidchatapp.views.chat.recyclerAdapters.ChatRecyclerAdapter
 import com.example.iurymiguel.androidchatapp.views.subjects.recyclerAdapters.SubscribedSubjectsRecyclerAdapter
 import com.example.iurymiguel.androidchatapp.views.subjects.recyclerAdapters.UnsubscribedSubjectsRecyclerAdapter
 import com.google.firebase.database.FirebaseDatabase
@@ -15,6 +16,7 @@ class AndroidChatApplication : Application() {
         single { ProgressDialogProvider() }
         single { UnsubscribedSubjectsRecyclerAdapter() }
         single { SubscribedSubjectsRecyclerAdapter() }
+        single { ChatRecyclerAdapter() }
         single { User() }
     }
 
