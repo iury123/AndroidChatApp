@@ -12,6 +12,7 @@
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:focusableInTouchMode="true"
             >
 
         <EditText
@@ -34,7 +35,7 @@
                 android:onClick="@{() -> activity.sendMessage()}"
                 android:id="@+id/buttonSendMessage" app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="2dp"/>
         <android.support.v7.widget.RecyclerView
                 android:id="@+id/chatRecyclerView"
                 android:background="@color/chat_background"
@@ -47,6 +48,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/editMessage" android:layout_marginBottom="8dp"/>
+                app:layout_constraintBottom_toTopOf="@+id/editMessage" android:layout_marginBottom="6dp"/>
     </android.support.constraint.ConstraintLayout>
 </layout>

@@ -52,8 +52,9 @@ class SubscribedSubjectsFragment : Fragment() {
         mAdapter.setDataSet(mViewModel.getSubscribedSubjectsLiveData().value)
 
         mAdapter.setOnClickListener {
-            mViewModel.mSelectedSubject = it
-            startActivity(Intent(activity, ChatActivity::class.java))
+            val intent = Intent(activity, ChatActivity::class.java)
+            intent.putExtra(getString(R.string.selected_subject_key), it)
+            startActivity(intent)
         }
 
         val recyclerView: RecyclerView = mBinding.subscribedSubjectsRecyclerView

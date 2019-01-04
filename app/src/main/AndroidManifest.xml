@@ -24,7 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".views.chat.ChatActivity">
+        <activity android:name=".views.chat.ChatActivity"
+                  android:parentActivityName=".views.subjects.MainActivity">
         </activity>
         <activity android:name=".views.subjects.AddSubjectActivity"
                   android:parentActivityName=".views.subjects.MainActivity"
