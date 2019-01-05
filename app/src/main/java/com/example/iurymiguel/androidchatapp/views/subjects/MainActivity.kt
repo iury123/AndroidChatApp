@@ -109,9 +109,7 @@ class MainActivity : AppCompatActivity() {
         val subjectKey = dataSnapshot.key as String
         val value = dataSnapshot.value as HashMap<*, *>
         val subjectName = value[Utils.SUBJECT_NAME] as String
-        val subjectSubscribers =
-            if (value[Utils.SUBSCRIBERS] != null) value[Utils.SUBSCRIBERS]
-            else hashMapOf<String, String>()
+        val subjectSubscribers = value[Utils.SUBSCRIBERS] ?: hashMapOf<String, String>()
         return Subject(subjectKey, subjectName, subjectSubscribers as HashMap<String, String>)
     }
 

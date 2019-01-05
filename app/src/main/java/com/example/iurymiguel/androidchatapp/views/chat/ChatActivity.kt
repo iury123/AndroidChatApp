@@ -147,7 +147,7 @@ class ChatActivity : AppCompatActivity() {
         val content = value[Utils.CONTENT] as String
         val datetime = value[Utils.DATETIME] as String
         val seenByAll = value[Utils.SEEN_BY_ALL] as Boolean
-        val receptorsSeen = value[Utils.RECEPTORS_SEEN]
+        val receptorsSeen = value[Utils.RECEPTORS_SEEN] ?: hashMapOf<String, Boolean>()
         val senderUser = User(
             value[Utils.SENDER_USER_KEY] as String,
             value[Utils.SENDER_NAME] as String,
@@ -175,7 +175,7 @@ class ChatActivity : AppCompatActivity() {
             } else if (mNetworkProvider.isNetworkAvailable()) {
                 message.messageStatus = Utils.MESSAGE_STATUS.SENT_CONFIRMED
             }
-
+            updateList(message)
         } else if (message.receptorsSeen[mCurrentUser.key] != null) {
 
             if (!message.seenByAll) {
@@ -184,12 +184,19 @@ class ChatActivity : AppCompatActivity() {
                 }
                 mViewModel.updateReceptorsSeenStatus(message, mCurrentUser)
             }
+            updateList(message)
         }
+    }
+
+    /**
+     * Updates the list after an adding.
+     * @param message the message added.
+     */
+    private fun updateList(message: Message) {
         mViewModel.mMessagesList += message
         mAdapter.notifyDataSetChanged()
         scrollToLastMessage()
     }
-
 
     /**
      * Adds a message in the list
