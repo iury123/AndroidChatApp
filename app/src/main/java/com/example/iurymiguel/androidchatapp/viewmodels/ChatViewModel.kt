@@ -22,13 +22,12 @@ class ChatViewModel : ViewModel() {
      * Retreives the database reference to messages of a subject.
      */
     fun getMessagesReference(): DatabaseReference {
-        if(mMessageReference == null) {
+        if (mMessageReference == null) {
             mMessageReference = FirebaseDatabase.getInstance().reference.child(Utils.SUBJECTS)
                 .child(mSubject.key).child(Utils.MESSAGES)
         }
         return mMessageReference!!
     }
-
 
 
     fun sendMessage(message: Message, callback: MessageCallbacks) {
@@ -48,10 +47,19 @@ class ChatViewModel : ViewModel() {
 
         getMessagesReference().child(message.key).setValue(hash)
             .addOnCompleteListener {
-                if(it.isSuccessful) {
+                if (it.isSuccessful) {
                     callback.onMessageSentConfirmed(message)
                 }
             }
         callback.onMessageSentNotConfirmed(message)
+    }
+
+
+    /**
+     * Deletes all messages.
+     */
+    fun deleteAllMessages() {
+        getMessagesReference().removeValue()
+        mMessagesList.clear()
     }
 }

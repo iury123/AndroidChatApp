@@ -8,6 +8,6 @@ data class Message(
     var seenByAll: Boolean = false,
     var dateTime: String,
     var senderUser: User = User(),
-    var messageStatus: Int = Utils.MESSAGE_STATUS.NONE,
+    var messageStatus: Int = Utils.MESSAGE_STATUS.SENT_NOT_CONFIRMED,
     var receptorsSeen: HashMap<String, Boolean> = hashMapOf()
 )

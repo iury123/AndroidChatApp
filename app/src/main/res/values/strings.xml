@@ -46,9 +46,7 @@
     <string name="no_subject_to_subscribe">Não há nenhum assunto para se inscrever</string>
     <string name="no_subscribed_subject">Nenhum assunto inscrito</string>
     <string name="add_subject">Adicionar Assunto</string>
-    <string name="message_test">
-        DFDASFASDFASDFSDFASAFSADFSFDFDASFASDFASDFSDFASAFSADFSFDASDFSAFDASDFSDFSAFDASDFASFAsdfsfsdfsfsfsfsfsdsdffssdfdssdfdfsfdsfdsfdsSDFASFSDFSAFSDFSFSADFASDFASFSAFSADFSAFDSDFASDFSDFSFSFDDSFSDFSFASDFASFASFSFAFSASDFSDFASFXDASDFSAFDASDFSDFSAFDASDFASFAsdfsfsdfsfsfsfsfsdsdffssdfdssdfdfsfdsfdsfdsSDFASFSDFSAFSDFSFSADFASDFASFSAFSADFSAFDSDFASDFSDFSFSFDDSFSDFSFASDFASFASFSFAFSASDFSDFASFX
-    </string>
     <string name="user_name_key">user_name</string>
     <string name="selected_subject_key">selected_subject</string>
+    <string name="delete_all_messages">Apagar mensagens</string>
 </resources>

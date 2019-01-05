@@ -76,7 +76,6 @@ class ChatRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             binding.message = message
             binding.executePendingBindings()
         }
-
     }
 
 }

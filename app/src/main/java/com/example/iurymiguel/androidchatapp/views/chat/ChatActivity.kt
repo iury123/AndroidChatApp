@@ -5,12 +5,15 @@ import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
+import android.view.MenuItem
 import com.example.iurymiguel.androidchatapp.R
 import com.example.iurymiguel.androidchatapp.databinding.ActivityChatBinding
 import com.example.iurymiguel.androidchatapp.interfaces.MessageCallbacks
 import com.example.iurymiguel.androidchatapp.model.Message
 import com.example.iurymiguel.androidchatapp.model.Subject
 import com.example.iurymiguel.androidchatapp.model.User
+import com.example.iurymiguel.androidchatapp.utils.NetworkProvider
 import com.example.iurymiguel.androidchatapp.utils.Utils
 import com.example.iurymiguel.androidchatapp.viewmodels.ChatViewModel
 import com.example.iurymiguel.androidchatapp.views.chat.recyclerAdapters.ChatRecyclerAdapter
@@ -28,7 +31,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityChatBinding
     private val mAdapter: ChatRecyclerAdapter by inject()
     private val mCurrentUser: User by inject()
-    private lateinit var mCurrentUserEmail: String
+    private val mNetworkProvider: NetworkProvider by inject()
     private val mChildEventListener = object : ChildEventListener {
 
         override fun onCancelled(p0: DatabaseError) {
@@ -77,6 +80,7 @@ class ChatActivity : AppCompatActivity() {
 
         addListChildEventListener()
         mViewModel.getMessagesReference().keepSynced(true)
+
     }
 
 
@@ -129,11 +133,7 @@ class ChatActivity : AppCompatActivity() {
             }
 
             override fun onMessageSentNotConfirmed(message: Message) {
-                message.messageStatus = Utils.MESSAGE_STATUS.SENT_NOT_CONFIRMED
-                mViewModel.mMessagesList += message
-                mAdapter.notifyDataSetChanged()
                 editMessage.text.clear()
-                scrollToLastMessage()
             }
         })
     }
@@ -160,22 +160,27 @@ class ChatActivity : AppCompatActivity() {
             seenByAll,
             datetime,
             senderUser,
-            Utils.MESSAGE_STATUS.NONE,
-            receptorsSeen as HashMap<String, Boolean>
+            receptorsSeen = receptorsSeen as HashMap<String, Boolean>
         )
     }
 
-
+    /**
+     * Adds incoming or outgoing message in the list.
+     * @param message the message.
+     */
     private fun addMessage(message: Message) {
         if (message.senderUser.email == mCurrentUser.email) {
             if (message.seenByAll) {
                 message.messageStatus = Utils.MESSAGE_STATUS.SEEN_BY_ALL
+            } else if (mNetworkProvider.isNetworkAvailable()) {
+                message.messageStatus = Utils.MESSAGE_STATUS.SENT_CONFIRMED
             }
             mViewModel.mMessagesList += message
             mAdapter.notifyDataSetChanged()
-        } else {
+        } else if (message.receptorsSeen[mCurrentUser.key] != null) {
 
         }
+        scrollToLastMessage()
     }
 
 
@@ -206,4 +211,24 @@ class ChatActivity : AppCompatActivity() {
     private fun scrollToLastMessage() {
         mBinding.chatRecyclerView.scrollToPosition(mViewModel.mMessagesList.count() - 1)
     }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.chat_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        val id = item.itemId
+
+        if (id == R.id.action_delete_all_messages) {
+            mViewModel.deleteAllMessages()
+            mAdapter.notifyDataSetChanged()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+
 }

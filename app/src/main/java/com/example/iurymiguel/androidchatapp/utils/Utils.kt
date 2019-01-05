@@ -12,10 +12,9 @@ import java.util.*
 class Utils private constructor() {
 
     object MESSAGE_STATUS {
-        const val NONE = 0
-        const val SENT_NOT_CONFIRMED = 1
-        const val SENT_CONFIRMED = 2
-        const val SEEN_BY_ALL = 3
+        const val SENT_NOT_CONFIRMED = 0
+        const val SENT_CONFIRMED = 1
+        const val SEEN_BY_ALL = 2
     }
 
     companion object {
