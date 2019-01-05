@@ -14,12 +14,12 @@ class ChatViewModel : ViewModel() {
 
     lateinit var mSubject: Subject
     val mMessagesList: MutableList<Message> = mutableListOf()
-    val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var mMessageReference: DatabaseReference? = null
 
 
     /**
      * Retreives the database reference to messages of a subject.
+     * @return the database reference.
      */
     fun getMessagesReference(): DatabaseReference {
         if (mMessageReference == null) {
@@ -29,7 +29,11 @@ class ChatViewModel : ViewModel() {
         return mMessageReference!!
     }
 
-
+    /**
+     * Sends a new message to a group.
+     * @param message the message to be sent.
+     * @param callback the callback which returns to the view.
+     */
     fun sendMessage(message: Message, callback: MessageCallbacks) {
 
         val hash: HashMap<String, Any> = hashMapOf()
@@ -54,6 +58,45 @@ class ChatViewModel : ViewModel() {
         callback.onMessageSentNotConfirmed(message)
     }
 
+
+    /**
+     * Checks if the current user is the last one who has seen the message.
+     * @param message the message seen.
+     * @param currentUser user data.
+     */
+    fun isCurrentUserLastToSeeMessage(message: Message, currentUser: User): Boolean {
+        var isTheLast = false
+        loop@ for ((key, hasSeen) in message.receptorsSeen) {
+            if (!hasSeen) {
+                when (key) {
+                    currentUser.key -> isTheLast = true
+                    else -> {
+                        isTheLast = false
+                        break@loop
+                    }
+                }
+            }
+        }
+        return isTheLast
+    }
+
+    /**
+     * Updates the message status showing that everybody has read it.
+     * @param message the message seen.
+     */
+    fun updateMessageSeenStatus(message: Message) {
+        getMessagesReference().child(message.key).child(Utils.SEEN_BY_ALL).setValue(true)
+    }
+
+    /**
+     * Updates receptor status showing that user has read the message.
+     * @param message the message seen.
+     * @param currentUser user data.
+     */
+    fun updateReceptorsSeenStatus(message: Message, currentUser: User) {
+        getMessagesReference().child(message.key).child(Utils.RECEPTORS_SEEN).child(currentUser.key)
+            .setValue(true)
+    }
 
     /**
      * Deletes all messages.

@@ -35,15 +35,14 @@ class ChatActivity : AppCompatActivity() {
     private val mChildEventListener = object : ChildEventListener {
 
         override fun onCancelled(p0: DatabaseError) {
-            val p = p0
         }
 
         override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            val y = p0
         }
 
         override fun onChildChanged(dataSnapshot: DataSnapshot, p1: String?) {
-            val x = dataSnapshot
+            val message = buildMessageObject(dataSnapshot)
+            addMessage(message)
         }
 
         override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
@@ -52,7 +51,6 @@ class ChatActivity : AppCompatActivity() {
         }
 
         override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-            val z = dataSnapshot
         }
     }
 
@@ -121,7 +119,9 @@ class ChatActivity : AppCompatActivity() {
         )
 
         for ((key, value) in mViewModel.mSubject.subscribers) {
-            message.receptorsSeen[key] = false
+            if (key != mCurrentUser.key) {
+                message.receptorsSeen[key] = false
+            }
         }
 
         mViewModel.sendMessage(message, object : MessageCallbacks {
@@ -175,11 +175,18 @@ class ChatActivity : AppCompatActivity() {
             } else if (mNetworkProvider.isNetworkAvailable()) {
                 message.messageStatus = Utils.MESSAGE_STATUS.SENT_CONFIRMED
             }
-            mViewModel.mMessagesList += message
-            mAdapter.notifyDataSetChanged()
+
         } else if (message.receptorsSeen[mCurrentUser.key] != null) {
 
+            if (!message.seenByAll) {
+                if (mViewModel.isCurrentUserLastToSeeMessage(message, mCurrentUser)) {
+                    mViewModel.updateMessageSeenStatus(message)
+                }
+                mViewModel.updateReceptorsSeenStatus(message, mCurrentUser)
+            }
         }
+        mViewModel.mMessagesList += message
+        mAdapter.notifyDataSetChanged()
         scrollToLastMessage()
     }
 
