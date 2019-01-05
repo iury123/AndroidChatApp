@@ -11,18 +11,36 @@ import java.util.*
 
 class Utils private constructor() {
 
+    object MESSAGE_STATUS {
+        const val NONE = 0
+        const val SENT_NOT_CONFIRMED = 1
+        const val SENT_CONFIRMED = 2
+        const val SEEN_BY_ALL = 3
+    }
+
     companion object {
 
         const val INCOMING_MSG = 0
         const val OUTGOING_MSG = 1
+
+        const val MESSAGES = "messages"
+        const val CONTENT = "content"
+        const val DATETIME = "datetime"
+        const val SENDER_NAME = "sender_name"
+        const val SENDER_USER_KEY = "sender_user_key"
+        const val SENDER_EMAIL = "sender_email"
+        const val RECEPTORS_SEEN = "receptors_seen"
+        const val SEEN_BY_ALL = "seen_by_all"
+
         const val SUBJECTS = "Subjects"
         const val SUBSCRIBERS = "subscribers"
         const val SUBJECT_NAME = "subject_name"
-        const val MESSAGES = "messages"
+
         const val USERS = "Users"
         const val USER_NAME = "user_name"
         const val USER_EMAIL = "user_email"
         const val USER_IS_ONLINE = "user_is_online"
+
         private const val ERROR_INVALID_EMAIL = "the email address is badly formatted."
         private const val ERROR_EMAIL_ALREADY_IN_USE = "the email address is already in use by another account."
         private const val ERROR_USER_NOT_FOUND =

@@ -5,9 +5,9 @@ import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import com.example.iurymiguel.androidchatapp.R
 import com.example.iurymiguel.androidchatapp.databinding.ActivityChatBinding
+import com.example.iurymiguel.androidchatapp.interfaces.MessageCallbacks
 import com.example.iurymiguel.androidchatapp.model.Message
 import com.example.iurymiguel.androidchatapp.model.Subject
 import com.example.iurymiguel.androidchatapp.model.User
@@ -20,32 +20,36 @@ import com.google.firebase.database.DatabaseError
 import kotlinx.android.synthetic.main.activity_chat.*
 import org.koin.android.ext.android.inject
 
+private const val INDEX_OUT_OF_BOUNDS = -1
+
 class ChatActivity : AppCompatActivity() {
 
     private lateinit var mViewModel: ChatViewModel
     private lateinit var mBinding: ActivityChatBinding
     private val mAdapter: ChatRecyclerAdapter by inject()
+    private val mCurrentUser: User by inject()
     private lateinit var mCurrentUserEmail: String
     private val mChildEventListener = object : ChildEventListener {
 
         override fun onCancelled(p0: DatabaseError) {
-
+            val p = p0
         }
 
         override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-
+            val y = p0
         }
 
         override fun onChildChanged(dataSnapshot: DataSnapshot, p1: String?) {
-
+            val x = dataSnapshot
         }
 
         override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
-
+            val message = buildMessageObject(dataSnapshot)
+            addMessage(message)
         }
 
         override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-
+            val z = dataSnapshot
         }
     }
 
@@ -64,9 +68,7 @@ class ChatActivity : AppCompatActivity() {
 
         mAdapter.setDataSet(mViewModel.mMessagesList)
 
-        mCurrentUserEmail = mViewModel.mAuth.currentUser!!.email!!
-
-        mAdapter.setCurrentUserEmail(mCurrentUserEmail)
+        mAdapter.setCurrentUserEmail(mCurrentUser.email)
 
         mBinding.chatRecyclerView.apply {
             adapter = mAdapter
@@ -74,6 +76,7 @@ class ChatActivity : AppCompatActivity() {
         }
 
         addListChildEventListener()
+        mViewModel.getMessagesReference().keepSynced(true)
     }
 
 
@@ -107,19 +110,94 @@ class ChatActivity : AppCompatActivity() {
             return
         }
 
-        val user = User(email = mCurrentUserEmail)
-
         val message = Message(
             content = messageContent,
-            senderUser = user,
+            senderUser = mCurrentUser,
             dateTime = Utils.getCurrentDateTime()
         )
 
-        mViewModel.mMessagesList += message
-        mAdapter.notifyDataSetChanged()
+        for ((key, value) in mViewModel.mSubject.subscribers) {
+            message.receptorsSeen[key] = false
+        }
 
-        editMessage.text.clear()
-        scrollToLastMessage()
+        mViewModel.sendMessage(message, object : MessageCallbacks {
+
+            override fun onMessageSentConfirmed(message: Message) {
+                message.messageStatus = Utils.MESSAGE_STATUS.SENT_CONFIRMED
+                mViewModel.mMessagesList += message
+                mAdapter.notifyDataSetChanged()
+            }
+
+            override fun onMessageSentNotConfirmed(message: Message) {
+                message.messageStatus = Utils.MESSAGE_STATUS.SENT_NOT_CONFIRMED
+                mViewModel.mMessagesList += message
+                mAdapter.notifyDataSetChanged()
+                editMessage.text.clear()
+                scrollToLastMessage()
+            }
+        })
+    }
+
+    /**
+     * Builds message object from dataSnapshot sent by server.
+     */
+    private fun buildMessageObject(dataSnapshot: DataSnapshot): Message {
+        val messageKey = dataSnapshot.key as String
+        val value = dataSnapshot.value as HashMap<*, *>
+        val content = value[Utils.CONTENT] as String
+        val datetime = value[Utils.DATETIME] as String
+        val seenByAll = value[Utils.SEEN_BY_ALL] as Boolean
+        val receptorsSeen = value[Utils.RECEPTORS_SEEN]
+        val senderUser = User(
+            value[Utils.SENDER_USER_KEY] as String,
+            value[Utils.SENDER_NAME] as String,
+            value[Utils.SENDER_EMAIL] as String
+        )
+
+        return Message(
+            messageKey,
+            content,
+            seenByAll,
+            datetime,
+            senderUser,
+            Utils.MESSAGE_STATUS.NONE,
+            receptorsSeen as HashMap<String, Boolean>
+        )
+    }
+
+
+    private fun addMessage(message: Message) {
+        if (message.senderUser.email == mCurrentUser.email) {
+            if (message.seenByAll) {
+                message.messageStatus = Utils.MESSAGE_STATUS.SEEN_BY_ALL
+            }
+            mViewModel.mMessagesList += message
+            mAdapter.notifyDataSetChanged()
+        } else {
+
+        }
+    }
+
+
+    /**
+     * Adds a message in the list
+     * @param message the message to be inserted.
+     */
+    operator fun MutableList<Message>.plusAssign(message: Message) {
+        val index = this.indexInList(message)
+        if (index > INDEX_OUT_OF_BOUNDS) {
+            this[index] = message
+        } else {
+            this.add(message)
+        }
+    }
+
+    /**
+     * Gets the index of a message in list if exists.
+     */
+    private fun MutableList<Message>.indexInList(message: Message): Int {
+        val messageKeys = this.map { it.key }
+        return messageKeys.indexOf(message.key)
     }
 
     /**

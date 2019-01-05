@@ -7,4 +7,5 @@
     <color name="line_divider_color">#c0c0c0</color>
     <color name="outgoing_msg_bubble">#AFFAB4</color>
     <color name="chat_background">#dedede</color>
+    <color name="black">#000000</color>
 </resources>
