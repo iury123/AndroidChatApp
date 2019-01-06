@@ -228,7 +228,7 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.action_see_profile -> {
                 Utils.showAlert(this, mCurrentUser.name, mCurrentUser.email,
-                    "Fechar", callback1 = {})
+                    getString(R.string.close), callback1 = {})
             }
             R.id.action_logout -> {
                 mViewModel.logout()
