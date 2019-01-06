@@ -78,14 +78,25 @@ class SubscribersActivity : AppCompatActivity() {
     }
 
 
+    /**
+     * Listen to any event related to the list of subjects.
+     */
     private fun addChildEventListener() {
         mViewModel.mUsersReference.addChildEventListener(mChildEventListener)
     }
 
+    /**
+     * Remove the listener which listens any list event.
+     */
     private fun removeChildEventListener() {
         mViewModel.mUsersReference.addChildEventListener(mChildEventListener)
     }
 
+    /**
+     * Builds user object
+     * @param dataSnapshot constains user data
+     * @return user object.
+     */
     private fun buildUserObject(dataSnapshot: DataSnapshot): User {
         val key = dataSnapshot.key as String
         val value = dataSnapshot.value as HashMap<*, *>
@@ -97,7 +108,10 @@ class SubscribersActivity : AppCompatActivity() {
         return user
     }
 
-
+    /**
+     * Check if user is subscribed.
+     * @param user the user to be subscribed.
+     */
     private fun filterSubscribedUsers(user: User) {
         mViewModel.mSubject.subscribers[user.key]?.let {
             mViewModel.mSubscribedUsersList += user
@@ -105,6 +119,10 @@ class SubscribersActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Adds a new user.
+     * @param user the user.
+     */
     operator fun MutableList<User>.plusAssign(user: User) {
         val index = this.indexInList(user)
         if(index > INDEX_OUT_OF_BOUNDS) {
@@ -114,6 +132,10 @@ class SubscribersActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Removes a user.
+     * @param user the user.
+     */
     operator fun MutableList<User>.minusAssign(user: User) {
         val index = this.indexInList(user)
         if(index > INDEX_OUT_OF_BOUNDS) {
@@ -121,13 +143,21 @@ class SubscribersActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Checks if user is in list.
+     * @param user the user.
+     */
     private fun MutableList<User>.indexInList(user: User): Int {
         val usersKeys = this.map { it.key }
         return usersKeys.indexOf(user.key)
     }
 
+    /**
+     * Listen to any changes about the current subject.
+     */
     private fun listenSubjectEvents() {
         mSubjectEventEmitter.onSubjectSubscribersChanged {
+            mViewModel.mSubject = it
             mViewModel.mSubscribedUsersList.clear()
             for(user in mViewModel.mAllUsers) {
                 if(it.subscribers[user.key] != null) {
