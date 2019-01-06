@@ -6,7 +6,6 @@ import com.example.iurymiguel.androidchatapp.model.Message
 import com.example.iurymiguel.androidchatapp.model.Subject
 import com.example.iurymiguel.androidchatapp.model.User
 import com.example.iurymiguel.androidchatapp.utils.Utils
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 

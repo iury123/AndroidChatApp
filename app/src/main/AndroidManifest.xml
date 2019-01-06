@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.iurymiguel.androidchatapp">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
             android:name=".application.AndroidChatApplication"
@@ -26,12 +26,17 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".views.chat.ChatActivity"
-                  android:parentActivityName=".views.subjects.MainActivity">
+        <activity
+                android:name=".views.chat.ChatActivity"
+        >
         </activity>
-        <activity android:name=".views.subjects.AddSubjectActivity"
-                  android:parentActivityName=".views.subjects.MainActivity"
-                  android:label="@string/add_subject">
+        <activity
+                android:name=".views.subjects.AddSubjectActivity"
+                android:label="@string/add_subject"
+        >
+        </activity>
+        <activity android:name=".views.chat.SubscribersActivity"
+                  android:label="@string/subscribers_list">
         </activity>
     </application>
 

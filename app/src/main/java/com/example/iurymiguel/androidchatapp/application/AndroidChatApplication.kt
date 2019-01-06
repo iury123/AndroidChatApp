@@ -6,6 +6,7 @@ import com.example.iurymiguel.androidchatapp.utils.SubjectEventEmitterProvider
 import com.example.iurymiguel.androidchatapp.utils.NetworkProvider
 import com.example.iurymiguel.androidchatapp.utils.ProgressDialogProvider
 import com.example.iurymiguel.androidchatapp.views.chat.recyclerAdapters.ChatRecyclerAdapter
+import com.example.iurymiguel.androidchatapp.views.chat.recyclerAdapters.SubscribersRecyclerAdapter
 import com.example.iurymiguel.androidchatapp.views.subjects.recyclerAdapters.SubscribedSubjectsRecyclerAdapter
 import com.example.iurymiguel.androidchatapp.views.subjects.recyclerAdapters.UnsubscribedSubjectsRecyclerAdapter
 import com.google.firebase.database.FirebaseDatabase
@@ -20,6 +21,7 @@ class AndroidChatApplication : Application() {
         single { NetworkProvider(androidContext()) }
         single { UnsubscribedSubjectsRecyclerAdapter() }
         single { SubscribedSubjectsRecyclerAdapter() }
+        single { SubscribersRecyclerAdapter() }
         single { ChatRecyclerAdapter() }
         single { User() }
         single { SubjectEventEmitterProvider() }

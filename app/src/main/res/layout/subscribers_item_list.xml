@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.example.iurymiguel.androidchatapp.model.User"/>
+        <variable name="subscriber" type="User"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:text="@{subscriber.name}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textName" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"/>
+        <TextView
+                android:text="@{subscriber.email}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textEmail" app:layout_constraintStart_toStartOf="@+id/textName"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textName"/>
+        <ImageView
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                app:setIcon="@{subscriber.isOnline}"
+                android:id="@+id/imageUserStatus"
+                app:layout_constraintTop_toTopOf="@+id/textUserStatus"
+                app:layout_constraintBottom_toBottomOf="@+id/textUserStatus"
+                app:layout_constraintStart_toStartOf="@+id/textEmail"/>
+        <TextView
+                android:text="@{subscriber.isOnline ? @string/online : @string/offline}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textUserStatus" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textEmail"
+                app:layout_constraintStart_toEndOf="@+id/imageUserStatus"
+                android:layout_marginStart="8dp"/>
+
+        <View
+                android:background="@color/line_divider_color"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:id="@+id/view" app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textUserStatus"
+                app:layout_constraintStart_toStartOf="@+id/imageUserStatus"/>
+    </android.support.constraint.ConstraintLayout>
+</layout>

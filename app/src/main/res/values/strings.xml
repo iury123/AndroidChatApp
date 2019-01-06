@@ -55,4 +55,8 @@
     <string name="delete_subject">Excluir assunto</string>
     <string name="deleted_subject">Assunto deletado</string>
     <string name="cancelled_subscription">Inscrição Cancelada</string>
+    <string name="subscribers_list">Lista de Inscritos</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
+    <string name="see_subscribers">Ver Inscritos</string>
 </resources>

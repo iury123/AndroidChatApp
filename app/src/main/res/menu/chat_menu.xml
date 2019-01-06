@@ -4,18 +4,23 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".views.chat.ChatActivity">
 
+    <item android:id="@+id/action_see_subscribers"
+          android:title="@string/see_subscribers"
+          android:orderInCategory="1"
+          app:showAsAction="never"/>
+
     <item android:id="@+id/action_delete_all_messages"
           android:title="@string/delete_all_messages"
-          android:orderInCategory="1"
+          android:orderInCategory="2"
           app:showAsAction="never" />
 
      <item android:id="@+id/action_unsubscribe"
            android:title="@string/exit_subject"
-           android:orderInCategory="2"
+           android:orderInCategory="3"
            app:showAsAction="never" />
 
     <item android:id="@+id/action_delete_subject"
           android:title="@string/delete_subject"
-          android:orderInCategory="3"
+          android:orderInCategory="4"
           app:showAsAction="never"/>
 </menu>

@@ -1,6 +1,7 @@
 package com.example.iurymiguel.androidchatapp.views.chat
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -61,6 +62,7 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_chat)
 
         mBinding.activity = this
@@ -246,6 +248,12 @@ class ChatActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
+
+            R.id.action_see_subscribers -> {
+                val intent = Intent(this, SubscribersActivity::class.java)
+                intent.putExtra(getString(R.string.subject), mViewModel.mSubject)
+                startActivity(intent)
+            }
             R.id.action_delete_all_messages -> {
                 mViewModel.deleteAllMessages()
                 mAdapter.notifyDataSetChanged()
@@ -257,6 +265,9 @@ class ChatActivity : AppCompatActivity() {
             }
             R.id.action_delete_subject -> {
                 mViewModel.deleteSubject()
+            }
+            android.R.id.home -> {
+                finish()
             }
         }
 
