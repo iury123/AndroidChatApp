@@ -223,8 +223,6 @@ class MainActivity : AppCompatActivity() {
      * Handles selection events of options menu.
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-
         when (item.itemId) {
             R.id.action_see_profile -> {
                 Utils.showAlert(this, mCurrentUser.name, mCurrentUser.email,
