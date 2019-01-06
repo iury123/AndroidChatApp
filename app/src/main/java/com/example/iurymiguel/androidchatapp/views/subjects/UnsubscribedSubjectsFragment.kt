@@ -16,6 +16,7 @@ import com.example.iurymiguel.androidchatapp.R
 import com.example.iurymiguel.androidchatapp.databinding.FragmentUnsubscribedSubjectsBinding
 import com.example.iurymiguel.androidchatapp.interfaces.FirebaseConnectionCallbacks
 import com.example.iurymiguel.androidchatapp.utils.ProgressDialogProvider
+import com.example.iurymiguel.androidchatapp.utils.TimeoutProvider
 import com.example.iurymiguel.androidchatapp.utils.Utils
 import com.example.iurymiguel.androidchatapp.viewmodels.AuthenticationViewModel
 import com.example.iurymiguel.androidchatapp.viewmodels.SubjectsViewModel
@@ -30,6 +31,7 @@ class UnsubscribedSubjectsFragment : Fragment() {
     private lateinit var mBinding: FragmentUnsubscribedSubjectsBinding
     private val mAdapter: UnsubscribedSubjectsRecyclerAdapter by inject()
     private val mProgress: ProgressDialogProvider by inject()
+    private val mTimeout: TimeoutProvider by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,8 +83,15 @@ class UnsubscribedSubjectsFragment : Fragment() {
      */
     private fun subscribeSubject() {
         mProgress.show(context)
+
+        mTimeout.startTimer {
+            mProgress.dismiss()
+            Utils.showToast(context, getString(R.string.timeout_warning), Toast.LENGTH_LONG)
+        }
+
         mViewModel.subscribesInSubject(object : FirebaseConnectionCallbacks {
             override fun <T> onSuccessConnection(args: Task<T>) {
+                mTimeout.cancelTimer()
                 mProgress.dismiss()
                 Utils.showToast(
                     context, getString(R.string.subscribed_subject) + " ${mViewModel.mSelectedSubject.name}",
@@ -91,6 +100,7 @@ class UnsubscribedSubjectsFragment : Fragment() {
             }
 
             override fun <T> onFailedConnection(args: Task<T>) {
+                mTimeout.cancelTimer()
                 mProgress.dismiss()
                 Utils.showToast(
                     context, getString(R.string.subscribe_error),
@@ -105,8 +115,15 @@ class UnsubscribedSubjectsFragment : Fragment() {
      */
     private fun deleteSubject() {
         mProgress.show(context)
+
+        mTimeout.startTimer {
+            mProgress.dismiss()
+            Utils.showToast(context, getString(R.string.timeout_warning), Toast.LENGTH_LONG)
+        }
+
         mViewModel.deleteSubject(object : FirebaseConnectionCallbacks {
             override fun <T> onSuccessConnection(args: Task<T>) {
+                mTimeout.cancelTimer()
                 mProgress.dismiss()
                 Utils.showToast(
                     context, getString(R.string.subject) +
@@ -117,6 +134,7 @@ class UnsubscribedSubjectsFragment : Fragment() {
             }
 
             override fun <T> onFailedConnection(args: Task<T>) {
+                mTimeout.cancelTimer()
                 mProgress.dismiss()
                 Utils.showToast(
                     context, getString(R.string.delete_subject_error),

@@ -5,6 +5,7 @@ import com.example.iurymiguel.androidchatapp.model.User
 import com.example.iurymiguel.androidchatapp.utils.SubjectEventEmitterProvider
 import com.example.iurymiguel.androidchatapp.utils.NetworkProvider
 import com.example.iurymiguel.androidchatapp.utils.ProgressDialogProvider
+import com.example.iurymiguel.androidchatapp.utils.TimeoutProvider
 import com.example.iurymiguel.androidchatapp.views.chat.recyclerAdapters.ChatRecyclerAdapter
 import com.example.iurymiguel.androidchatapp.views.chat.recyclerAdapters.SubscribersRecyclerAdapter
 import com.example.iurymiguel.androidchatapp.views.subjects.recyclerAdapters.SubscribedSubjectsRecyclerAdapter
@@ -25,6 +26,7 @@ class AndroidChatApplication : Application() {
         single { ChatRecyclerAdapter() }
         single { User() }
         single { SubjectEventEmitterProvider() }
+        single { TimeoutProvider() }
     }
 
     override fun onCreate() {

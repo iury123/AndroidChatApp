@@ -59,4 +59,7 @@
     <string name="online">Online</string>
     <string name="offline">Offline</string>
     <string name="see_subscribers">Ver Inscritos</string>
+    <string name="timeout_warning">Falha de conexão. No entanto, esta operação será sincronizada com o banco de dados
+        assim que a conexão for estabelecida.
+    </string>
 </resources>

@@ -10,6 +10,7 @@ import com.example.iurymiguel.androidchatapp.R
 import com.example.iurymiguel.androidchatapp.databinding.ActivityAddSubjectBinding
 import com.example.iurymiguel.androidchatapp.interfaces.FirebaseConnectionCallbacks
 import com.example.iurymiguel.androidchatapp.utils.ProgressDialogProvider
+import com.example.iurymiguel.androidchatapp.utils.TimeoutProvider
 import com.example.iurymiguel.androidchatapp.utils.Utils
 import com.example.iurymiguel.androidchatapp.viewmodels.AddSubjectViewModel
 import com.google.android.gms.tasks.Task
@@ -21,6 +22,7 @@ class AddSubjectActivity : AppCompatActivity() {
     private lateinit var mViewModel: AddSubjectViewModel
     private val mProgress: ProgressDialogProvider by inject()
     private val mContext = this
+    private val mTimeout: TimeoutProvider by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,14 +49,21 @@ class AddSubjectActivity : AppCompatActivity() {
 
         mProgress.show(this)
 
+        mTimeout.startTimer {
+            mProgress.dismiss()
+            Utils.showToast(mContext, getString(R.string.timeout_warning), Toast.LENGTH_LONG)
+        }
+
         mViewModel.addSubject(newSubject, object : FirebaseConnectionCallbacks {
             override fun <T> onSuccessConnection(args: Task<T>) {
+                mTimeout.cancelTimer()
                 mProgress.dismiss()
                 Utils.showToast(mContext, getString(R.string.add_subject_success), Toast.LENGTH_SHORT)
                 finish()
             }
 
             override fun <T> onFailedConnection(args: Task<T>) {
+                mTimeout.cancelTimer()
                 mProgress.dismiss()
                 Utils.showToast(mContext, getString(R.string.add_subject_error), Toast.LENGTH_SHORT)
             }

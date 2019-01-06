@@ -18,7 +18,6 @@ import com.google.firebase.database.DatabaseError
 import kotlinx.android.synthetic.main.activity_subscribers.*
 import org.koin.android.ext.android.inject
 
-
 private const val INDEX_OUT_OF_BOUNDS = -1
 
 class SubscribersActivity : AppCompatActivity() {
