@@ -182,7 +182,7 @@ class ChatActivity : AppCompatActivity() {
             }
             updateList(message)
         } else if (message.receptorsSeen[mCurrentUser.key] != null) {
-            if (!message.seenByAll && message.receptorsSeen[mCurrentUser.key] == false) {
+            if (message.receptorsSeen[mCurrentUser.key] == false) {
                 mViewModel.updateReceptorsSeenStatus(message, mCurrentUser)
             }
             updateList(message)
