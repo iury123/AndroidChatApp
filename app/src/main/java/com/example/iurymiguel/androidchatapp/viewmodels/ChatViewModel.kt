@@ -53,11 +53,19 @@ class ChatViewModel : ViewModel() {
         getMessagesReference().child(message.key).setValue(hash)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
-                    getMessagesReference().child(message.key).child(Utils.COMMITED).setValue(true)
+                    updateMessageCommitStatus(message.key)
                     callback.onMessageSentConfirmed(message)
                 }
             }
         callback.onMessageSentNotConfirmed(message)
+    }
+
+    /**
+     * Confirms the database commit of a message.
+     * @param messageKey the key of the message.
+     */
+    fun updateMessageCommitStatus(messageKey: String) {
+        getMessagesReference().child(messageKey).child(Utils.COMMITED).setValue(true)
     }
 
     /**
@@ -78,7 +86,7 @@ class ChatViewModel : ViewModel() {
      * Updates the message status showing that everybody has read it.
      * @param message the message seen.
      */
-    fun updateMessageSeenStatus(message: Message) {
+    fun updateMessageSeenByAllStatus(message: Message) {
         getMessagesReference().child(message.key).child(Utils.SEEN_BY_ALL).setValue(true)
     }
 

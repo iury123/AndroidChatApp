@@ -13,6 +13,7 @@ import com.example.iurymiguel.androidchatapp.interfaces.MessageCallbacks
 import com.example.iurymiguel.androidchatapp.model.Message
 import com.example.iurymiguel.androidchatapp.model.Subject
 import com.example.iurymiguel.androidchatapp.model.User
+import com.example.iurymiguel.androidchatapp.utils.NetworkProvider
 import com.example.iurymiguel.androidchatapp.utils.Utils
 import com.example.iurymiguel.androidchatapp.viewmodels.ChatViewModel
 import com.example.iurymiguel.androidchatapp.views.chat.recyclerAdapters.ChatRecyclerAdapter
@@ -30,6 +31,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityChatBinding
     private val mAdapter: ChatRecyclerAdapter by inject()
     private val mCurrentUser: User by inject()
+    private val mNetworkProvider: NetworkProvider by inject()
     private val mChildEventListener = object : ChildEventListener {
 
         override fun onCancelled(p0: DatabaseError) {
@@ -174,9 +176,11 @@ class ChatActivity : AppCompatActivity() {
             if (!message.seenByAll) {
                 if (message.commited) {
                     message.messageStatus = Utils.MESSAGE_STATUS.SENT_CONFIRMED
+                } else if (mNetworkProvider.isNetworkAvailable()) {
+                    mViewModel.updateMessageCommitStatus(message.key)
                 }
                 if (mViewModel.allSubscribersHasSeen(message)) {
-                    mViewModel.updateMessageSeenStatus(message)
+                    mViewModel.updateMessageSeenByAllStatus(message)
                 }
             } else {
                 message.messageStatus = Utils.MESSAGE_STATUS.SEEN_BY_ALL
