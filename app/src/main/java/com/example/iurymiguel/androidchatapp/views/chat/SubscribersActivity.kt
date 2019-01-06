@@ -8,6 +8,7 @@ import android.view.MenuItem
 import com.example.iurymiguel.androidchatapp.R
 import com.example.iurymiguel.androidchatapp.model.Subject
 import com.example.iurymiguel.androidchatapp.model.User
+import com.example.iurymiguel.androidchatapp.utils.SubjectEventEmitterProvider
 import com.example.iurymiguel.androidchatapp.utils.Utils
 import com.example.iurymiguel.androidchatapp.viewmodels.SubscribersViewModel
 import com.example.iurymiguel.androidchatapp.views.chat.recyclerAdapters.SubscribersRecyclerAdapter
@@ -23,6 +24,7 @@ private const val INDEX_OUT_OF_BOUNDS = -1
 class SubscribersActivity : AppCompatActivity() {
 
     private lateinit var mViewModel: SubscribersViewModel
+    private val mSubjectEventEmitter: SubjectEventEmitterProvider by inject()
     private val mAdapter: SubscribersRecyclerAdapter by inject()
     private val mChildEventListener = object : ChildEventListener {
         override fun onCancelled(p0: DatabaseError) {
@@ -34,11 +36,13 @@ class SubscribersActivity : AppCompatActivity() {
 
         override fun onChildChanged(dataSnapshot: DataSnapshot, p1: String?) {
             val user = buildUserObject(dataSnapshot)
+            mViewModel.mAllUsers += user
             filterSubscribedUsers(user)
         }
 
         override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
             val user = buildUserObject(dataSnapshot)
+            mViewModel.mAllUsers += user
             filterSubscribedUsers(user)
         }
 
@@ -63,12 +67,14 @@ class SubscribersActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context)
         }
         addChildEventListener()
+        listenSubjectEvents()
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
         removeChildEventListener()
+        mSubjectEventEmitter.removeOnSubjectSubscribersChangedCallback()
     }
 
 
@@ -108,11 +114,31 @@ class SubscribersActivity : AppCompatActivity() {
         }
     }
 
+    operator fun MutableList<User>.minusAssign(user: User) {
+        val index = this.indexInList(user)
+        if(index > INDEX_OUT_OF_BOUNDS) {
+            this.removeAt(index)
+        }
+    }
+
     private fun MutableList<User>.indexInList(user: User): Int {
         val usersKeys = this.map { it.key }
         return usersKeys.indexOf(user.key)
     }
 
+    private fun listenSubjectEvents() {
+        mSubjectEventEmitter.onSubjectSubscribersChanged {
+            mViewModel.mSubscribedUsersList.clear()
+            for(user in mViewModel.mAllUsers) {
+                if(it.subscribers[user.key] != null) {
+                    mViewModel.mSubscribedUsersList += user
+                } else {
+                    mViewModel.mSubscribedUsersList -= user
+                }
+            }
+            mAdapter.notifyDataSetChanged()
+        }
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId == android.R.id.home) {

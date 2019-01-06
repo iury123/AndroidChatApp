@@ -9,6 +9,7 @@ import com.google.firebase.database.FirebaseDatabase
 class SubscribersViewModel : ViewModel() {
 
     lateinit var mSubject: Subject
+    val mAllUsers: MutableList<User> = mutableListOf()
     val mSubscribedUsersList: MutableList<User> = mutableListOf()
     val mUsersReference = FirebaseDatabase.getInstance().reference.child(Utils.USERS)
 
