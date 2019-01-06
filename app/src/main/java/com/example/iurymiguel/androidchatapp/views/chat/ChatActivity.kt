@@ -13,7 +13,6 @@ import com.example.iurymiguel.androidchatapp.interfaces.MessageCallbacks
 import com.example.iurymiguel.androidchatapp.model.Message
 import com.example.iurymiguel.androidchatapp.model.Subject
 import com.example.iurymiguel.androidchatapp.model.User
-import com.example.iurymiguel.androidchatapp.utils.NetworkProvider
 import com.example.iurymiguel.androidchatapp.utils.Utils
 import com.example.iurymiguel.androidchatapp.viewmodels.ChatViewModel
 import com.example.iurymiguel.androidchatapp.views.chat.recyclerAdapters.ChatRecyclerAdapter
@@ -31,7 +30,6 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityChatBinding
     private val mAdapter: ChatRecyclerAdapter by inject()
     private val mCurrentUser: User by inject()
-    private val mNetworkProvider: NetworkProvider by inject()
     private val mChildEventListener = object : ChildEventListener {
 
         override fun onCancelled(p0: DatabaseError) {
@@ -48,6 +46,7 @@ class ChatActivity : AppCompatActivity() {
         override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
             val message = buildMessageObject(dataSnapshot)
             addMessage(message)
+            scrollToLastMessage()
         }
 
         override fun onChildRemoved(dataSnapshot: DataSnapshot) {
@@ -147,6 +146,7 @@ class ChatActivity : AppCompatActivity() {
         val content = value[Utils.CONTENT] as String
         val datetime = value[Utils.DATETIME] as String
         val seenByAll = value[Utils.SEEN_BY_ALL] as Boolean
+        val commited = value[Utils.COMMITED] as Boolean
         val receptorsSeen = value[Utils.RECEPTORS_SEEN] ?: hashMapOf<String, Boolean>()
         val senderUser = User(
             value[Utils.SENDER_USER_KEY] as String,
@@ -160,6 +160,7 @@ class ChatActivity : AppCompatActivity() {
             seenByAll,
             datetime,
             senderUser,
+            commited = commited,
             receptorsSeen = receptorsSeen as HashMap<String, Boolean>
         )
     }
@@ -171,7 +172,7 @@ class ChatActivity : AppCompatActivity() {
     private fun addMessage(message: Message) {
         if (message.senderUser.email == mCurrentUser.email) {
             if (!message.seenByAll) {
-                if (mNetworkProvider.isNetworkAvailable()) {
+                if (message.commited) {
                     message.messageStatus = Utils.MESSAGE_STATUS.SENT_CONFIRMED
                 }
                 if (mViewModel.allSubscribersHasSeen(message)) {
@@ -196,7 +197,6 @@ class ChatActivity : AppCompatActivity() {
     private fun updateList(message: Message) {
         mViewModel.mMessagesList += message
         mAdapter.notifyDataSetChanged()
-        scrollToLastMessage()
     }
 
     /**

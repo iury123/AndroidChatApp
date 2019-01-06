@@ -43,6 +43,7 @@ class ChatViewModel : ViewModel() {
         hash[Utils.SENDER_USER_KEY] = message.senderUser.key
         hash[Utils.SENDER_NAME] = message.senderUser.name
         hash[Utils.SENDER_EMAIL] = message.senderUser.email
+        hash[Utils.COMMITED] = message.commited
         hash[Utils.RECEPTORS_SEEN] = message.receptorsSeen
 
         val messageKey = getMessagesReference().push().key!!
@@ -52,6 +53,7 @@ class ChatViewModel : ViewModel() {
         getMessagesReference().child(message.key).setValue(hash)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
+                    getMessagesReference().child(message.key).child(Utils.COMMITED).setValue(true)
                     callback.onMessageSentConfirmed(message)
                 }
             }

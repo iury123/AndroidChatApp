@@ -9,5 +9,6 @@ data class Message(
     var dateTime: String,
     var senderUser: User = User(),
     var messageStatus: Int = Utils.MESSAGE_STATUS.SENT_NOT_CONFIRMED,
+    var commited: Boolean = false,
     var receptorsSeen: HashMap<String, Boolean> = hashMapOf()
 )

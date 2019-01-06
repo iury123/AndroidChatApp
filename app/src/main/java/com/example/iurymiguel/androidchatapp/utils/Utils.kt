@@ -29,6 +29,7 @@ class Utils private constructor() {
         const val SENDER_USER_KEY = "sender_user_key"
         const val SENDER_EMAIL = "sender_email"
         const val RECEPTORS_SEEN = "receptors_seen"
+        const val COMMITED = "commited"
         const val SEEN_BY_ALL = "seen_by_all"
 
         const val SUBJECTS = "Subjects"
