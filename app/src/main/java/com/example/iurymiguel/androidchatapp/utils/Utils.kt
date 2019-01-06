@@ -93,7 +93,7 @@ class Utils private constructor() {
         fun showAlert(
             context: Context?, title: String = "", message: String = "",
             callback1ButtonText: String = "", callback2ButtonText: String? = "",
-            callback1: () -> Unit, callback2: () -> Unit?
+            callback1: () -> Unit, callback2: (() -> Unit)? = null
         ) {
 
             val builder = AlertDialog.Builder(context)
@@ -103,7 +103,7 @@ class Utils private constructor() {
                 callback1()
             }
 
-            callback2.let {
+            callback2?.let {
                 builder.setNeutralButton(callback2ButtonText) { _, _ ->
                     it()
                 }

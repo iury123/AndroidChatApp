@@ -225,11 +225,17 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
 
-        if (id == R.id.action_logout) {
-            mViewModel.logout()
-            val intent = Intent(this, AuthenticationActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(intent)
+        when (item.itemId) {
+            R.id.action_see_profile -> {
+                Utils.showAlert(this, mCurrentUser.name, mCurrentUser.email,
+                    "Fechar", callback1 = {})
+            }
+            R.id.action_logout -> {
+                mViewModel.logout()
+                val intent = Intent(this, AuthenticationActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+            }
         }
 
         return super.onOptionsItemSelected(item)

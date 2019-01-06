@@ -49,4 +49,5 @@
     <string name="user_name_key">user_name</string>
     <string name="selected_subject_key">selected_subject</string>
     <string name="delete_all_messages">Apagar mensagens</string>
+    <string name="see_profile">Ver Perfil</string>
 </resources>
