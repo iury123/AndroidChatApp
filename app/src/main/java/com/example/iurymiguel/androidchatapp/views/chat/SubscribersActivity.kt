@@ -58,7 +58,7 @@ class SubscribersActivity : AppCompatActivity() {
 
         mAdapter.setDataSet(mViewModel.mSubscribedUsersList)
 
-        subscribersRecyclerView.apply {
+        recyclerView.apply {
             adapter = mAdapter
             layoutManager = LinearLayoutManager(context)
         }
