@@ -82,17 +82,22 @@ class ChatActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context)
         }
 
-        addListChildEventListener()
         mViewModel.getMessagesReference().keepSynced(true)
-
         listenSubjectEvents()
-
     }
 
+    override fun onResume() {
+        super.onResume()
+        addListChildEventListener()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        removeListChildEventListener()
+    }
 
     override fun onDestroy() {
         super.onDestroy()
-        removeListChildEventListener()
         mSubjectEventEmitter.removeAllListeners()
     }
 
