@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <import type="com.example.iurymiguel.androidchatapp.model.Message"/>
         <variable name="message" type="Message"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:layout_width="match_parent"
-                                                 android:paddingBottom="8dp"
-                                                 android:paddingTop="8dp"
-                                                 android:paddingStart="0dp"
-                                                 android:paddingEnd="50dp"
-                                                 android:layout_height="wrap_content">
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="50dp"
+            android:layout_height="wrap_content">
 
         <android.support.constraint.ConstraintLayout android:layout_width="wrap_content"
                                                      android:layout_height="wrap_content"

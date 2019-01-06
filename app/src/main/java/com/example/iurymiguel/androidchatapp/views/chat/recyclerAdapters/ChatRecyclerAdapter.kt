@@ -1,8 +1,13 @@
 package com.example.iurymiguel.androidchatapp.views.chat.recyclerAdapters
 
+import android.databinding.BindingAdapter
+import android.databinding.BindingMethod
+import android.databinding.BindingMethods
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import com.example.iurymiguel.androidchatapp.R
 import com.example.iurymiguel.androidchatapp.databinding.IncomingMsgLayoutBinding
 import com.example.iurymiguel.androidchatapp.databinding.OutgoingMsgLayoutBinding
 import com.example.iurymiguel.androidchatapp.model.Message
@@ -51,11 +56,19 @@ class ChatRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
+    /**
+     * Sets the data set which is displayed in list.
+     * @param list the list of messages.
+     */
     fun setDataSet(list: MutableList<Message>?) {
         mMessagesList = list ?: mutableListOf()
         notifyDataSetChanged()
     }
 
+    /**
+     * Sets the current user email.
+     * @param email the email of current user.
+     */
     fun setCurrentUserEmail(email: String) {
         mCurrentUserEmail = email
     }
@@ -78,4 +91,22 @@ class ChatRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
+    companion object {
+        @JvmStatic
+        @BindingAdapter("loadIcon")
+        fun loadIcon(imageView: ImageView, messageStatus: Int) {
+            val resource = when (messageStatus) {
+                Utils.MESSAGE_STATUS.SENT_NOT_CONFIRMED -> R.drawable.single_tick
+                Utils.MESSAGE_STATUS.SENT_CONFIRMED -> R.drawable.double_tick
+                else -> R.drawable.double_blue_tick
+            }
+            imageView.setImageResource(resource)
+        }
+    }
+
 }
+
+
+
+
+
