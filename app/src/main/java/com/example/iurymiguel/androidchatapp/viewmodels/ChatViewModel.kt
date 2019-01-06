@@ -58,26 +58,18 @@ class ChatViewModel : ViewModel() {
         callback.onMessageSentNotConfirmed(message)
     }
 
-
     /**
-     * Checks if the current user is the last one who has seen the message.
-     * @param message the message seen.
-     * @param currentUser user data.
+     * Checks if all receptors have read the message.
+     * @param message the message.
+     * @return true or false.
      */
-    fun isCurrentUserLastToSeeMessage(message: Message, currentUser: User): Boolean {
-        var isTheLast = false
-        loop@ for ((key, hasSeen) in message.receptorsSeen) {
+    fun allSubscribersHasSeen(message: Message): Boolean {
+        for ((key, hasSeen) in message.receptorsSeen) {
             if (!hasSeen) {
-                when (key) {
-                    currentUser.key -> isTheLast = true
-                    else -> {
-                        isTheLast = false
-                        break@loop
-                    }
-                }
+                return false
             }
         }
-        return isTheLast
+        return true
     }
 
     /**

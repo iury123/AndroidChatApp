@@ -170,18 +170,20 @@ class ChatActivity : AppCompatActivity() {
      */
     private fun addMessage(message: Message) {
         if (message.senderUser.email == mCurrentUser.email) {
-            if (message.seenByAll) {
+            if (!message.seenByAll) {
+                if (mNetworkProvider.isNetworkAvailable()) {
+                    message.messageStatus = Utils.MESSAGE_STATUS.SENT_CONFIRMED
+                }
+
+                if (mViewModel.allSubscribersHasSeen(message)) {
+                    mViewModel.updateMessageSeenStatus(message)
+                }
+            } else {
                 message.messageStatus = Utils.MESSAGE_STATUS.SEEN_BY_ALL
-            } else if (mNetworkProvider.isNetworkAvailable()) {
-                message.messageStatus = Utils.MESSAGE_STATUS.SENT_CONFIRMED
             }
             updateList(message)
         } else if (message.receptorsSeen[mCurrentUser.key] != null) {
-
             if (!message.seenByAll) {
-                if (mViewModel.isCurrentUserLastToSeeMessage(message, mCurrentUser)) {
-                    mViewModel.updateMessageSeenStatus(message)
-                }
                 mViewModel.updateReceptorsSeenStatus(message, mCurrentUser)
             }
             updateList(message)
