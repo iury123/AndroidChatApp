@@ -224,7 +224,7 @@ class ChatActivity : AppCompatActivity() {
      * As the last message is sent, scrolls the list to the last one.
      */
     private fun scrollToLastMessage() {
-        mBinding.chatRecyclerView.scrollToPosition(mViewModel.mMessagesList.count() - 1)
+        mBinding.chatRecyclerView.scrollToPosition(mAdapter.itemCount - 1)
     }
 
 
