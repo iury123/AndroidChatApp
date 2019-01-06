@@ -174,7 +174,6 @@ class ChatActivity : AppCompatActivity() {
                 if (mNetworkProvider.isNetworkAvailable()) {
                     message.messageStatus = Utils.MESSAGE_STATUS.SENT_CONFIRMED
                 }
-
                 if (mViewModel.allSubscribersHasSeen(message)) {
                     mViewModel.updateMessageSeenStatus(message)
                 }
@@ -183,7 +182,7 @@ class ChatActivity : AppCompatActivity() {
             }
             updateList(message)
         } else if (message.receptorsSeen[mCurrentUser.key] != null) {
-            if (!message.seenByAll) {
+            if (!message.seenByAll && message.receptorsSeen[mCurrentUser.key] == false) {
                 mViewModel.updateReceptorsSeenStatus(message, mCurrentUser)
             }
             updateList(message)
