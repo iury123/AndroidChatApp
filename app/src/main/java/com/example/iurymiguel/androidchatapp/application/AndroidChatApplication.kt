@@ -2,6 +2,7 @@ package com.example.iurymiguel.androidchatapp.application
 
 import android.app.Application
 import com.example.iurymiguel.androidchatapp.model.User
+import com.example.iurymiguel.androidchatapp.utils.SubjectEventEmitterProvider
 import com.example.iurymiguel.androidchatapp.utils.NetworkProvider
 import com.example.iurymiguel.androidchatapp.utils.ProgressDialogProvider
 import com.example.iurymiguel.androidchatapp.views.chat.recyclerAdapters.ChatRecyclerAdapter
@@ -21,6 +22,7 @@ class AndroidChatApplication : Application() {
         single { SubscribedSubjectsRecyclerAdapter() }
         single { ChatRecyclerAdapter() }
         single { User() }
+        single { SubjectEventEmitterProvider() }
     }
 
     override fun onCreate() {

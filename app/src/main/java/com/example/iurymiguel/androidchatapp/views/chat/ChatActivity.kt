@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.example.iurymiguel.androidchatapp.R
 import com.example.iurymiguel.androidchatapp.databinding.ActivityChatBinding
 import com.example.iurymiguel.androidchatapp.interfaces.MessageCallbacks
@@ -14,6 +15,7 @@ import com.example.iurymiguel.androidchatapp.model.Message
 import com.example.iurymiguel.androidchatapp.model.Subject
 import com.example.iurymiguel.androidchatapp.model.User
 import com.example.iurymiguel.androidchatapp.utils.NetworkProvider
+import com.example.iurymiguel.androidchatapp.utils.SubjectEventEmitterProvider
 import com.example.iurymiguel.androidchatapp.utils.Utils
 import com.example.iurymiguel.androidchatapp.viewmodels.ChatViewModel
 import com.example.iurymiguel.androidchatapp.views.chat.recyclerAdapters.ChatRecyclerAdapter
@@ -32,6 +34,7 @@ class ChatActivity : AppCompatActivity() {
     private val mAdapter: ChatRecyclerAdapter by inject()
     private val mCurrentUser: User by inject()
     private val mNetworkProvider: NetworkProvider by inject()
+    private val mSubjectEventEmitter: SubjectEventEmitterProvider by inject()
     private val mChildEventListener = object : ChildEventListener {
 
         override fun onCancelled(p0: DatabaseError) {
@@ -80,12 +83,15 @@ class ChatActivity : AppCompatActivity() {
         addListChildEventListener()
         mViewModel.getMessagesReference().keepSynced(true)
 
+        listenSubjectEvents()
+
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
         removeListChildEventListener()
+        mSubjectEventEmitter.removeAllListeners()
     }
 
     /**
@@ -239,15 +245,36 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        val id = item.itemId
-
-        if (id == R.id.action_delete_all_messages) {
-            mViewModel.deleteAllMessages()
-            mAdapter.notifyDataSetChanged()
+        when (item.itemId) {
+            R.id.action_delete_all_messages -> {
+                mViewModel.deleteAllMessages()
+                mAdapter.notifyDataSetChanged()
+            }
+            R.id.action_unsubscribe -> {
+                mViewModel.unsubscribeSubject(mCurrentUser)
+                Utils.showToast(this, getString(R.string.cancelled_subscription), Toast.LENGTH_SHORT)
+                finish()
+            }
+            R.id.action_delete_subject -> {
+                mViewModel.deleteSubject()
+            }
         }
 
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * Listens to any subject event.
+     */
+    private fun listenSubjectEvents() {
+        mSubjectEventEmitter.onSubjectChanged {
+            mViewModel.mSubject = it
+        }
+
+        mSubjectEventEmitter.onSubjectDeleted {
+            Utils.showToast(this, getString(R.string.deleted_subject), Toast.LENGTH_SHORT)
+            finish()
+        }
+    }
 
 }

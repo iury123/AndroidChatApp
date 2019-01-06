@@ -51,4 +51,8 @@
     <string name="delete_all_messages">Apagar mensagens</string>
     <string name="see_profile">Ver Perfil</string>
     <string name="close">Fechar</string>
+    <string name="exit_subject">Cancelar Inscrição</string>
+    <string name="delete_subject">Excluir assunto</string>
+    <string name="deleted_subject">Assunto deletado</string>
+    <string name="cancelled_subscription">Inscrição Cancelada</string>
 </resources>

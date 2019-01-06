@@ -15,6 +15,8 @@ class ChatViewModel : ViewModel() {
     lateinit var mSubject: Subject
     val mMessagesList: MutableList<Message> = mutableListOf()
     private var mMessageReference: DatabaseReference? = null
+    private val mSubjectsReference = FirebaseDatabase.getInstance()
+        .reference.child(Utils.SUBJECTS)
 
 
     /**
@@ -74,6 +76,9 @@ class ChatViewModel : ViewModel() {
      * @return true or false.
      */
     fun allSubscribersHasSeen(message: Message): Boolean {
+
+        if (message.receptorsSeen.isEmpty()) return false
+
         for ((key, hasSeen) in message.receptorsSeen) {
             if (!hasSeen) {
                 return false
@@ -107,4 +112,22 @@ class ChatViewModel : ViewModel() {
         getMessagesReference().removeValue()
         mMessagesList.clear()
     }
+
+    /**
+     * Deletes the subject from database
+     */
+    fun deleteSubject() {
+        mSubjectsReference.child(mSubject.key).removeValue()
+    }
+
+    /**
+     * Unsubscribes the current user.
+     * @param currentUser the current user data.
+     */
+    fun unsubscribeSubject(currentUser: User) {
+        mSubjectsReference.child(mSubject.key).child(Utils.SUBSCRIBERS)
+            .child(currentUser.key).removeValue()
+    }
+
+
 }

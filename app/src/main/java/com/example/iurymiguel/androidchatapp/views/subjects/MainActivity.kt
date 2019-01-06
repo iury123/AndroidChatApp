@@ -21,6 +21,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import android.arch.lifecycle.MutableLiveData
 import com.example.iurymiguel.androidchatapp.model.User
+import com.example.iurymiguel.androidchatapp.utils.SubjectEventEmitterProvider
 import com.google.firebase.database.ValueEventListener
 
 
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mViewModel: SubjectsViewModel
     private val mCurrentUser: User by inject()
+    private val mSubjectEventEmitter: SubjectEventEmitterProvider by inject()
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private val mChildEventListener = object : ChildEventListener {
         override fun onCancelled(p0: DatabaseError) {
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         override fun onChildChanged(dataSnapshot: DataSnapshot, p1: String?) {
             val subject = buildSubjectObject(dataSnapshot)
             handleSubjectInLists(subject)
+            mSubjectEventEmitter.publishSubjectChanged(subject)
         }
 
         override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
@@ -54,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         override fun onChildRemoved(dataSnapshot: DataSnapshot) {
             val subject = buildSubjectObject(dataSnapshot)
             removeSubject(subject)
+            mSubjectEventEmitter.publishSubjectDeleted(subject)
         }
     }
 
